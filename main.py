@@ -32,6 +32,7 @@ class Simplex(QDialog):
         self.ui.tableFuncObj.setHorizontalHeaderLabels(nombreColum)
         self.tablaRestriccion(self.cantVariables, self.cantRestricciones)
         self.ui.tableRestr.setHorizontalHeaderLabels(nombreColum)
+        self.ui.btnCalcular.setEnabled(True)
     
     # Método: Genera la tabla de la función objetivo
     def tablaFuncionObjetivo(self, variables):
@@ -95,9 +96,12 @@ class Simplex(QDialog):
             self.ui.btnGenerar.setEnabled(False)
             
             # Deshabilita las tablas
-            self.ui.tableRestr.setEnabled(False) 
-            self.ui.tableFuncObj.setEnabled(False) 
-            self.ui.tableResult .setEnabled(False)
+            #self.ui.tableRestr.setEnabled(False) 
+            #self.ui.tableFuncObj.setEnabled(False) 
+            #self.ui.tableResult .setEnabled(False)
+            self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            self.ui.tableRestr.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            self.ui.tableResult.setEditTriggers(QAbstractItemView.NoEditTriggers)
             
         except Exception as err:
             print(f"Error: {err}")
@@ -250,14 +254,17 @@ class Simplex(QDialog):
         self.ui.lblMaxZ.setText("")
         self.ui.lblRestricc.setText("")
         
-        # Habilita el botón calcular y generar
-        self.ui.btnCalcular.setEnabled(True)
+        # Habilita el botón generar
         self.ui.btnGenerar.setEnabled(True)
+        self.ui.btnCalcular.setEnabled(False)
         
         # Habilita las tablas 
-        self.ui.tableFuncObj.setEnabled(True) 
-        self.ui.tableRestr.setEnabled(True) 
-        self.ui.tableResult .setEnabled(True)
+        #self.ui.tableFuncObj.setEnabled(True) 
+        #self.ui.tableRestr.setEnabled(True) 
+        #self.ui.tableResult .setEnabled(True)
+        """ self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.EditTriggers)
+        self.ui.tableRestr.setEditTriggers(QAbstractItemView.EditTriggers)
+        self.ui.tableResult.setEditTriggers(QAbstractItemView.EditTriggers) """
         
         # Eliminar las tablas
         self.ui.tableFuncObj.setColumnCount(0)

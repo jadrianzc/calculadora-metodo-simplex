@@ -134,6 +134,7 @@ class Ui_Form(object):
         self.btnCalcular.setGeometry(QtCore.QRect(20, 40, 80, 30))
         self.btnCalcular.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnCalcular.setObjectName("btnCalcular")
+        self.btnCalcular.setEnabled(False)
         # BTN SIGUIENTE TABLA
         self.btnNextTabla = QtWidgets.QPushButton(self.groupBoxAcciones)
         self.btnNextTabla.setGeometry(QtCore.QRect(120, 40, 120, 30))
