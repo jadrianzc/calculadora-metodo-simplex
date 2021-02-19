@@ -93,6 +93,8 @@ class Simplex(QDialog):
             # Deshabilita el botón calcular y generar
             self.ui.btnCalcular.setEnabled(False)
             self.ui.btnGenerar.setEnabled(False)
+            
+            # Deshabilita las tablas
             self.ui.tableRestr.setEnabled(False) 
             self.ui.tableFuncObj.setEnabled(False) 
             self.ui.tableResult .setEnabled(False)
@@ -251,10 +253,19 @@ class Simplex(QDialog):
         # Habilita el botón calcular y generar
         self.ui.btnCalcular.setEnabled(True)
         self.ui.btnGenerar.setEnabled(True)
+        
+        # Habilita las tablas 
         self.ui.tableFuncObj.setEnabled(True) 
         self.ui.tableRestr.setEnabled(True) 
         self.ui.tableResult .setEnabled(True)
-        self.ui.tableFuncObj.destroy()
+        
+        # Eliminar las tablas
+        self.ui.tableFuncObj.setColumnCount(0)
+        self.ui.tableFuncObj.setRowCount(0)
+        self.ui.tableRestr.setColumnCount(0)
+        self.ui.tableRestr.setRowCount(0)
+        self.ui.tableResult.setColumnCount(0)
+        self.ui.tableResult.setRowCount(0)
           
 # Inicia la aplicación
 if __name__ == '__main__':
