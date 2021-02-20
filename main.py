@@ -18,6 +18,7 @@ class Simplex(QDialog):
         self.ui.btnGenerar.clicked.connect(self.generateArrays)
         self.ui.btnCalcular.clicked.connect(self.dataFuncObj)
         self.ui.btnNuevo.clicked.connect(self.deleteData)
+        self.ui.btnNextTabla.clicked.connect(self.nextTable)
         
     # Método: Genera las matrices para ingresar la cantidad de variables y restricciones
     def generateArrays(self):
@@ -96,9 +97,6 @@ class Simplex(QDialog):
             self.ui.btnGenerar.setEnabled(False)
             
             # Deshabilita las tablas
-            #self.ui.tableRestr.setEnabled(False) 
-            #self.ui.tableFuncObj.setEnabled(False) 
-            #self.ui.tableResult .setEnabled(False)
             self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.NoEditTriggers)
             self.ui.tableRestr.setEditTriggers(QAbstractItemView.NoEditTriggers)
             self.ui.tableResult.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -180,6 +178,8 @@ class Simplex(QDialog):
         self.ui.tableResult.clear()
         fil = fila + 4
         col = fila + column + 3
+        self.fila = fil
+        self.columna = col
         
         # Genera las filas y columnas
         self.ui.tableResult.setRowCount(fil)
@@ -232,7 +232,6 @@ class Simplex(QDialog):
                         elif(c == 1):
                             if(f <= fila+1):
                                 incremento3 += 1
-                                print(incremento3)
                                 item = f"S{incremento3}"
                         else:
                             newFila = f - 2
@@ -241,11 +240,94 @@ class Simplex(QDialog):
                     
                     cellItem = QTableWidgetItem(item)
                     self.ui.tableResult.setItem(f,c,cellItem)
-                            
+                           
         except Exception as err:
             print(f"Error f: {err}")  
         
 
+    # Método: Genera la siguiente tabla
+    def nextTable(self):
+        restriccion = self.cantRestricciones
+        variable = self.cantVariables
+        filas = self.fila
+        columnas = self.columna
+        cjZj = []
+        colVarEntr = []
+        filVarSali = []
+        bi = []
+        valorVarSali = []
+        
+        # Bucle: Obtiene los valores de Bi
+        for b in range(restriccion):
+            item = self.ui.tableResult.item(b+2, columnas-1)
+            bi.append(int(item.text()))
+        print(f"Bi: {bi}")   
+        
+        # Bucle: Obtiene los valores de Cj-Zj
+        for i in range(variable):
+            item = self.ui.tableResult.item(filas-1,i+2)
+            cjZj.append(int(item.text()))
+        print(f"Cj-Zj: {cjZj}")
+        # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
+        variableEntrada = max(cjZj)
+        
+        # Obtiene el indice de la variable de entrada
+        indexColVariableEntrada = cjZj.index(variableEntrada) + 2
+        
+        # Bucle: Obtiene los valores de la columna de la variable de entrada
+        for j in range(restriccion):
+            item = self.ui.tableResult.item(j+2,indexColVariableEntrada)
+            colVarEntr.append(int(item.text()))
+        print(f"v.e: {colVarEntr}")
+        
+        # Bucle: Realiza la división entre Bi y los valores de la columna de la variable de entrada
+        for k in range(restriccion):
+            try:
+                valorVarSal = float(bi[k]) / float(colVarEntr[k])
+                valorVarSali.append(round(valorVarSal, 3))
+            except:
+                valorVarSali.append(0)
+        print(f"división: {valorVarSali}")
+        # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
+        variableSalida = min(valorVarSali)
+        
+        # Obtiene el indice de la variable de salida
+        indexFilVariableSalida = valorVarSali.index(variableSalida) + 2
+
+        # Ubicamos el pibote
+        pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
+        print(f"Pibote: {pibote}")
+        
+        # Bucle: Obtiene la fila pibote
+        for p in range(variable+restriccion+1):
+            item = self.ui.tableResult.item(indexFilVariableSalida,p+2)
+            filVarSali.append(int(item.text()))
+        print(f"v.s: {filVarSali}")
+        
+        # Bucle: Divide la fila pibote por el pibote
+        filaPibote = []
+        for new in filVarSali:
+            item = float(new) / pibote
+            filaPibote.append(round(item,3))
+        print(f"Fila New Pibote: {filaPibote}")
+        
+        newFilas = []
+        for nwFila in colVarEntr:
+            n = []
+            antiguaFila = []
+            if(nwFila != pibote):
+                indexF = colVarEntr.index(nwFila)
+                for p in range(variable+restriccion+1):
+                    item = float(self.ui.tableResult.item(indexF+2,p+2).text())
+                    antiguaFila.append(round(item, 3))
+                
+                for fPibo in filaPibote:
+                    item = (fPibo * (nwFila * -1))
+                    n.append(item)
+                suma = np.array(antiguaFila) + np.array(n)
+                newFilas.append(suma.tolist())
+        print(f"Nuevas Filas: {newFilas}")
+        
     # Método: Elimina los datos de la tabla
     def deleteData(self):
         # Resetea las tablas y labels
@@ -259,12 +341,8 @@ class Simplex(QDialog):
         self.ui.btnCalcular.setEnabled(False)
         
         # Habilita las tablas 
-        #self.ui.tableFuncObj.setEnabled(True) 
-        #self.ui.tableRestr.setEnabled(True) 
-        #self.ui.tableResult .setEnabled(True)
-        """ self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.EditTriggers)
-        self.ui.tableRestr.setEditTriggers(QAbstractItemView.EditTriggers)
-        self.ui.tableResult.setEditTriggers(QAbstractItemView.EditTriggers) """
+        self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        self.ui.tableRestr.setEditTriggers(QAbstractItemView.AllEditTriggers)
         
         # Eliminar las tablas
         self.ui.tableFuncObj.setColumnCount(0)
