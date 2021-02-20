@@ -6,7 +6,7 @@ class Ui_Form(object):
         # FORM
         Form.setObjectName("Form")
         Form.resize(1280, 720)
-        Form.setMinimumSize(QtCore.QSize(1365, 760))
+        Form.setMinimumSize(QtCore.QSize(1280, 720))
         Form.setMaximumSize(QtCore.QSize(1920, 1080))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")

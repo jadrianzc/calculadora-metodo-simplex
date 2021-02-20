@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from vista.ui_metodoSimplex import Ui_Form
 import numpy as np
-import sys, re
+import sys, re, math
 
 class Simplex(QDialog):
     cantVariables = 0
@@ -66,6 +66,7 @@ class Simplex(QDialog):
         self.cantVariables = self.ui.inputVar.value()
         self.cantRestricciones = self.ui.inputRes.value()
         
+        # Ejecuta la función para generar las restricciones
         self.dataRestr(self.cantVariables, self.cantRestricciones)
         
         matrizFuncObj = []
@@ -226,6 +227,7 @@ class Simplex(QDialog):
                     elif(f == fil-1 and (c != 0 or c != 1)):
                         item = f"{self.matrizFuncObjNum[incremento]}"
                         incremento += 1
+                    # Valida primera y segunda columna
                     else:
                         if(c == 0):
                             item = "0"
@@ -268,6 +270,7 @@ class Simplex(QDialog):
             item = self.ui.tableResult.item(filas-1,i+2)
             cjZj.append(int(item.text()))
         print(f"Cj-Zj: {cjZj}")
+        
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
         variableEntrada = max(cjZj)
         
@@ -288,6 +291,7 @@ class Simplex(QDialog):
             except:
                 valorVarSali.append(0)
         print(f"división: {valorVarSali}")
+
         # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
         variableSalida = min(valorVarSali)
         
@@ -311,21 +315,38 @@ class Simplex(QDialog):
             filaPibote.append(round(item,3))
         print(f"Fila New Pibote: {filaPibote}")
         
+        # Bucle: Genera las nuevas filas
         newFilas = []
         for nwFila in colVarEntr:
             n = []
             antiguaFila = []
-            if(nwFila != pibote):
+            if(float(nwFila) != pibote):
                 indexF = colVarEntr.index(nwFila)
                 for p in range(variable+restriccion+1):
                     item = float(self.ui.tableResult.item(indexF+2,p+2).text())
                     antiguaFila.append(round(item, 3))
                 
                 for fPibo in filaPibote:
-                    item = (fPibo * (nwFila * -1))
+                    item = float(fPibo * (nwFila * -1)) 
                     n.append(item)
+            
                 suma = np.array(antiguaFila) + np.array(n)
                 newFilas.append(suma.tolist())
+
+                # CAMBIAR FOR INICIAL POR EL LEN DE COLVARENTR 
+                for f in range(len(newFilas)):
+                    print(f"List: {newFilas[f]}")
+                    for nF in range(variable+restriccion+1):
+                        print(f"X: {newFilas[f][nF]}")
+                        item = newFilas[f][nF]
+                #cellItem = QTableWidgetItem(str(item))
+                #self.ui.tableResult.setItem(indexF+2,p+2,cellItem)
+        """ for f in range(len(newFilas)):
+            print(f"List: {newFilas[f]}")
+            for nF in range(variable+restriccion+1):
+                print(f"X: {newFilas[f][nF]}")
+                item = newFilas[f][nF] """
+                
         print(f"Nuevas Filas: {newFilas}")
         
     # Método: Elimina los datos de la tabla
