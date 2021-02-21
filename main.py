@@ -262,13 +262,13 @@ class Simplex(QDialog):
         # Bucle: Obtiene los valores de Bi
         for b in range(restriccion):
             item = self.ui.tableResult.item(b+2, columnas-1)
-            bi.append(int(item.text()))
+            bi.append(float(item.text()))
         print(f"Bi: {bi}")   
         
         # Bucle: Obtiene los valores de Cj-Zj
         for i in range(variable):
             item = self.ui.tableResult.item(filas-1,i+2)
-            cjZj.append(int(item.text()))
+            cjZj.append(float(item.text()))
         print(f"Cj-Zj: {cjZj}")
         
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
@@ -280,7 +280,7 @@ class Simplex(QDialog):
         # Bucle: Obtiene los valores de la columna de la variable de entrada
         for j in range(restriccion):
             item = self.ui.tableResult.item(j+2,indexColVariableEntrada)
-            colVarEntr.append(int(item.text()))
+            colVarEntr.append(float(item.text()))
         print(f"v.e: {colVarEntr}")
         
         # Bucle: Realiza la división entre Bi y los valores de la columna de la variable de entrada
@@ -302,52 +302,78 @@ class Simplex(QDialog):
         pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
         print(f"Pibote: {pibote}")
         
+        # Bucle: Obtiene las variables para reemplazar en la tabla Cb y Xb
+        for rem in range(2):
+            item = self.ui.tableResult.item(rem,indexColVariableEntrada)
+            cellItem = QTableWidgetItem(item.text())
+            self.ui.tableResult.setItem(indexFilVariableSalida,rem,cellItem)
+        
         # Bucle: Obtiene la fila pibote
         for p in range(variable+restriccion+1):
             item = self.ui.tableResult.item(indexFilVariableSalida,p+2)
-            filVarSali.append(int(item.text()))
+            filVarSali.append(float(item.text()))
         print(f"v.s: {filVarSali}")
         
         # Bucle: Divide la fila pibote por el pibote
         filaPibote = []
         for new in filVarSali:
-            item = float(new) / pibote
-            filaPibote.append(round(item,3))
+            try:
+                item = float(new) / pibote
+                filaPibote.append(round(item,3))
+            except:
+                filaPibote.append(0)
         print(f"Fila New Pibote: {filaPibote}")
         
         # Bucle: Genera las nuevas filas
-        newFilas = []
         for nwFila in colVarEntr:
-            n = []
-            antiguaFila = []
             if(float(nwFila) != pibote):
                 indexF = colVarEntr.index(nwFila)
                 for p in range(variable+restriccion+1):
-                    item = float(self.ui.tableResult.item(indexF+2,p+2).text())
-                    antiguaFila.append(round(item, 3))
+                    # Obtiene los valores de la fila anterior
+                    antiguaFila = float(self.ui.tableResult.item(indexF+2,p+2).text())
+                    # Obtiene la multiplicación de las demás filas con el pibote
+                    nuevaFila = float((filaPibote[p] * (nwFila * -1)))
+                    # Realiza la suma para formar la nueva 
+                    suma = nuevaFila + antiguaFila 
+                    suma = round(suma, 3)
+                    # Inserta los nuevos valores
+                    cellItem = QTableWidgetItem(str(suma))
+                    self.ui.tableResult.setItem(indexF+2,p+2,cellItem)
+            else:
+                indexF = colVarEntr.index(nwFila)
+                for p in range(variable+restriccion+1):
+                    item = float(filaPibote[p])
+                    pibote = round(item,3)
+                    # Inserta la fila pibote
+                    cellItem = QTableWidgetItem(str(pibote))
+                    self.ui.tableResult.setItem(indexF+2,p+2,cellItem)
+        
+        # Bucle: Genera los nuevo valores de Zj
+        for uF in range(variable+restriccion+1):
+            total = 0
+            zj = 0
+            for res in range(restriccion):
+                valor = self.ui.tableResult.item(res+2, 0).text()
+                valor2 = self.ui.tableResult.item(res+2, uF+2).text()
                 
-                for fPibo in filaPibote:
-                    item = float(fPibo * (nwFila * -1)) 
-                    n.append(item)
+                total = float(valor) * float(valor2)
+                zj += total
+                zj = round(zj,3)
             
-                suma = np.array(antiguaFila) + np.array(n)
-                newFilas.append(suma.tolist())
-
-                # CAMBIAR FOR INICIAL POR EL LEN DE COLVARENTR 
-                for f in range(len(newFilas)):
-                    print(f"List: {newFilas[f]}")
-                    for nF in range(variable+restriccion+1):
-                        print(f"X: {newFilas[f][nF]}")
-                        item = newFilas[f][nF]
-                #cellItem = QTableWidgetItem(str(item))
-                #self.ui.tableResult.setItem(indexF+2,p+2,cellItem)
-        """ for f in range(len(newFilas)):
-            print(f"List: {newFilas[f]}")
-            for nF in range(variable+restriccion+1):
-                print(f"X: {newFilas[f][nF]}")
-                item = newFilas[f][nF] """
-                
-        print(f"Nuevas Filas: {newFilas}")
+            cellItem = QTableWidgetItem(str(zj))
+            self.ui.tableResult.setItem(filas-2,uF+2,cellItem)
+        
+        # Bucle: Genera los nuevos valores de Cj-Zj
+        for colCj in range(variable+restriccion):
+            cj = float(self.ui.tableResult.item(0, colCj+2).text())
+            zj = float(self.ui.tableResult.item(filas-2, colCj+2).text())
+            cjZj = cj - zj
+            cjZj = round(cjZj,3)
+            cellItem = QTableWidgetItem(str(cjZj))
+            self.ui.tableResult.setItem(filas-1,colCj+2,cellItem)        
+            
+            
+                       
         
     # Método: Elimina los datos de la tabla
     def deleteData(self):

@@ -180,14 +180,14 @@ class Ui_Form(object):
         self.lblRestricc.setObjectName("lblRestricc")
         # TABLA RESULTADO
         self.tableResult = QtWidgets.QTableWidget(self.groupBoxResul)
-        self.tableResult.setGeometry(QtCore.QRect(20, 220, 750, 220))
+        self.tableResult.setGeometry(QtCore.QRect(20, 220, 750, 300))
         self.tableResult.setObjectName("tableResult")
         self.tableResult.setColumnCount(0)
         self.tableResult.setRowCount(0)
         self.tableResult.verticalHeader().setVisible(False)
         self.tableResult.horizontalHeader().setVisible(False)
         self.tableResult.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
-        self.tableResult.horizontalHeader().setDefaultSectionSize(70)
+        self.tableResult.horizontalHeader().setDefaultSectionSize(75)
         self.tableResult.setStyleSheet("border: none; font-size: 16px; font-weight: bold; font-family: Century Gothic")
         
         
