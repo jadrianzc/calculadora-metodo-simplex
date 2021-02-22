@@ -5,7 +5,7 @@ class Ui_Form(object):
         # FORM
         Form.setObjectName("Form")
         Form.resize(1280, 720)
-        Form.setMinimumSize(QtCore.QSize(1375, 800))
+        Form.setMinimumSize(QtCore.QSize(1366, 768))
         Form.setMaximumSize(QtCore.QSize(1920, 1080))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
@@ -97,7 +97,7 @@ class Ui_Form(object):
         self.tableFuncObj.verticalHeader().setVisible(False)
         self.tableFuncObj.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
         self.tableFuncObj.horizontalHeader().setDefaultSectionSize(50)
-        self.tableFuncObj.setStyleSheet("border: none; font-size: 16px; font-weight: bold; vertical-align: middle; font-family: Century Gothic")
+        self.tableFuncObj.setStyleSheet("border: none; background: transparent; font-size: 16px; font-weight: bold; vertical-align: middle; font-family: Century Gothic")
         # GROUP BOX RESTRICCIONES
         self.groupBoxRestriccion = QtWidgets.QGroupBox(Form)
         self.groupBoxRestriccion.setGeometry(QtCore.QRect(30, 360, 450, 260))
@@ -117,7 +117,7 @@ class Ui_Form(object):
         self.tableRestr.verticalHeader().setVisible(False)
         self.tableRestr.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
         self.tableRestr.horizontalHeader().setDefaultSectionSize(50)
-        self.tableRestr.setStyleSheet("border: none; font-size: 16px; font-weight: bold; vertical-align: middle; font-family: Century Gothic")
+        self.tableRestr.setStyleSheet("border: none; background: transparent; font-size: 16px; font-weight: bold; vertical-align: middle; font-family: Century Gothic")
         # GROUP BOX ACCIONES
         self.groupBoxAcciones = QtWidgets.QGroupBox(Form)
         self.groupBoxAcciones.setGeometry(QtCore.QRect(30, 630, 450, 100))
@@ -134,20 +134,26 @@ class Ui_Form(object):
         self.btnCalcular.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnCalcular.setObjectName("btnCalcular")
         self.btnCalcular.setEnabled(False)
+        # BTN CALCULAR PIBOTE
+        self.btnCalPibote = QtWidgets.QPushButton(self.groupBoxAcciones)
+        self.btnCalPibote.setGeometry(QtCore.QRect(120, 40, 130, 30))
+        self.btnCalPibote.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnCalPibote.setObjectName("btnCalPibote")
+        self.btnCalPibote.setEnabled(False)
         # BTN SIGUIENTE TABLA
         self.btnNextTabla = QtWidgets.QPushButton(self.groupBoxAcciones)
-        self.btnNextTabla.setGeometry(QtCore.QRect(120, 40, 120, 30))
+        self.btnNextTabla.setGeometry(QtCore.QRect(270, 40, 120, 30))
         self.btnNextTabla.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnNextTabla.setObjectName("btnNextTabla")
         self.btnNextTabla.setEnabled(False)
         # BTN NUEVO 
         self.btnNuevo = QtWidgets.QPushButton(self.groupBoxAcciones)
-        self.btnNuevo.setGeometry(QtCore.QRect(260, 40, 80, 30))
+        self.btnNuevo.setGeometry(QtCore.QRect(20, 80, 80, 30))
         self.btnNuevo.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnNuevo.setObjectName("btnNuevo")
         # BTN SALIR
         self.btnSalir = QtWidgets.QPushButton(self.groupBoxAcciones)
-        self.btnSalir.setGeometry(QtCore.QRect(360, 40, 80, 30))
+        self.btnSalir.setGeometry(QtCore.QRect(120, 80, 80, 30))
         self.btnSalir.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnSalir.setObjectName("btnSalir")
         # GROUP BOX RESULTADO
@@ -188,7 +194,7 @@ class Ui_Form(object):
         self.tableResult.horizontalHeader().setVisible(False)
         self.tableResult.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
         self.tableResult.horizontalHeader().setDefaultSectionSize(75)
-        self.tableResult.setStyleSheet("border: none; font-size: 16px; font-weight: bold; font-family: Century Gothic")
+        self.tableResult.setStyleSheet("border: none; background: transparent; font-size: 16px; font-weight: bold; font-family: Century Gothic")
         # LABEL PIBOTE
         self.lblPibote = QtWidgets.QLabel(self.groupBoxResul)
         self.lblPibote.setGeometry(QtCore.QRect(20, 520, 150, 40))
@@ -233,6 +239,7 @@ class Ui_Form(object):
         self.groupBoxFuncObj.setTitle(_translate("Form", "Función Objetivo"))
         self.groupBoxAcciones.setTitle(_translate("Form", "Acciones"))
         self.btnCalcular.setText(_translate("Form", "CALCULAR"))
+        self.btnCalPibote.setText(_translate("Form", "CALCULAR PIBOTE"))
         self.btnNextTabla.setText(_translate("Form", "SIGUIENTE TABLA"))
         self.btnNuevo.setText(_translate("Form", "NUEVO"))
         self.btnSalir.setText(_translate("Form", "SALIR"))

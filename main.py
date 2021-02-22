@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from PyQt5 import QtGui
 from vista.ui_metodoSimplex import Ui_Form
 import numpy as np
 import sys, re, math
@@ -20,6 +21,7 @@ class Simplex(QDialog):
         self.ui.btnCalcular.clicked.connect(self.dataRestr)
         self.ui.btnCalcular.clicked.connect(self.validarTabla)
         self.ui.btnNuevo.clicked.connect(self.deleteData)
+        self.ui.btnCalPibote.clicked.connect(self.dataCurrentTable)
         self.ui.btnNextTabla.clicked.connect(self.nextTable)
         self.ui.btnSalir.clicked.connect(self.exitApp)
         
@@ -28,21 +30,23 @@ class Simplex(QDialog):
         self.cantVariables = self.ui.inputVar.value()
         self.cantRestricciones = self.ui.inputRes.value()
         
-        nombreColum = []
-        for i in range(self.cantVariables):
-            nombreColum.append(f"x{i+1}")
-        
         self.tablaFuncionObjetivo(self.cantVariables)
-        self.ui.tableFuncObj.setHorizontalHeaderLabels(nombreColum)
         self.tablaRestriccion(self.cantVariables, self.cantRestricciones)
-        self.ui.tableRestr.setHorizontalHeaderLabels(nombreColum)
+        # self.ui.tableFuncObj.setHorizontalHeaderLabels(nombreColum)
+        for i in range(self.cantVariables):
+            item1 = QTableWidgetItem(f"x{i+1}")
+            item1.setBackground(QtGui.QColor(255, 100, 0))
+            self.ui.tableFuncObj.setHorizontalHeaderItem(i,item1)
+            self.ui.tableRestr.setHorizontalHeaderItem(i,item1)
+
+        # self.ui.tableRestr.setHorizontalHeaderLabels(nombreColum)
         self.ui.btnCalcular.setEnabled(True)
     
     # Método: Genera la tabla de la función objetivo
     def tablaFuncionObjetivo(self, variables):
         self.ui.tableFuncObj.clear()
         self.ui.tableFuncObj.setRowCount(1)
-        self.ui.tableFuncObj.setColumnCount(variables)       
+        self.ui.tableFuncObj.setColumnCount(variables)
         
     # Método: Genera la tabla de las restricciones
     def tablaRestriccion(self, variables, restricciones):
@@ -183,7 +187,8 @@ class Simplex(QDialog):
             # Deshabilita el botón calcular y generar
             self.ui.btnCalcular.setEnabled(False)
             self.ui.btnGenerar.setEnabled(False)
-            self.ui.btnNextTabla.setEnabled(True)
+            # self.ui.btnNextTabla.setEnabled(True)
+            self.ui.btnCalPibote.setEnabled(True)
             
             # Deshabilita las tablas
             self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -192,11 +197,8 @@ class Simplex(QDialog):
     
     # Método: Valida la útima tabla
     def validaLastTable(self, cjZj, bi):
-        
         z = float(self.ui.tableResult.item(self.fila-2, self.columna-1).text())
-        
-        print(f"Cj-Zj: {cjZj}")
-        
+    
         count = 0
         for valor in cjZj:
             if(valor <= 0):
@@ -204,16 +206,17 @@ class Simplex(QDialog):
         
         if(count == len(cjZj)):
             bi.append(z)
-            print(f"Bi: {bi}")
             for indBi in range(len(bi)):
                 newBi = round(bi[indBi],1)
                 cellItem = QTableWidgetItem(str(newBi))
                 self.ui.tableResult.setItem(indBi+2,self.columna-1,cellItem)
+            
+
+
             return False
         else:
             return True
-            
-            
+              
     # Método: Crea la primer tabla
     def generarTabla(self, column, fila):
         self.ui.tableResult.clear()
@@ -287,64 +290,77 @@ class Simplex(QDialog):
             print(f"Error f: {err}")  
     
     # Método: Obtener datos de la tabla actual
-    # def dataCurrentTable(self):
-    #     restriccion = self.cantRestricciones
-    #     variable = self.cantVariables
-    #     filas = self.fila
-    #     columnas = self.columna
-    #     self.cjZj = []
-    #     self.bi = []
-    #     self.colVarEntr = []
-    #     self.valorVarSali = []
+    def dataCurrentTable(self):
+        restriccion = self.cantRestricciones
+        variable = self.cantVariables
+        filas = self.fila
+        columnas = self.columna
+        self.cjZj = []
+        self.bi = []
+        self.colVarEntr = []
+        self.valorVarSali = []
         
-    #     # Bucle: Obtiene los valores de self.Bi
-    #     for b in range(restriccion):
-    #         item = self.ui.tableResult.item(b+2, columnas-1)
-    #         self.bi.append(float(item.text())) 
+        # Bucle: Obtiene los valores de self.Bi
+        for b in range(restriccion):
+            item = self.ui.tableResult.item(b+2, columnas-1)
+            self.bi.append(float(item.text())) 
         
-    #     # Bucle: Obtiene los valores de Cj-Zj
-    #     for i in range(variable):
-    #         item = self.ui.tableResult.item(filas-1,i+2)
-    #         self.cjZj.append(float(item.text()))
-        
-    #     # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
-    #     variableEntrada = max(self.cjZj)
-    #     ve = self.ui.tableResult.item(1,self.cjZj.index(variableEntrada)+2).text()
-    #     textVarEnt = f"V.E = {ve}"
-    #     self.ui.lblVarEntrante.setText(textVarEnt)
-        
-    #     # Obtiene el indice de la variable de entrada
-    #     indexColVariableEntrada = self.cjZj.index(variableEntrada) + 2
-        
-    #     # Bucle: Obtiene los valores de la columna de la variable de entrada
-    #     for j in range(restriccion):
-    #         item = self.ui.tableResult.item(j+2,indexColVariableEntrada)
-    #         self.colVarEntr.append(float(item.text()))
-        
-    #     # Bucle: Realiza la división entre Bi y los valores de la columna de la variable de entrada
-    #     for k in range(restriccion):
-    #         try:
-    #             valorVarSal = float(self.bi[k]) / float(self.colVarEntr[k])
-    #             if(valorVarSal >= 0):
-    #                 self.valorVarSali.append(round(valorVarSal, 4))
-    #             else:
-    #                 self.valorVarSali.append(round(valorVarSal, 4)*-100000000)                   
-    #         except:
-    #             self.self.valorVarSali.append(100000000)
+        # Bucle: Obtiene los valores de Cj-Zj
+        for i in range(variable):
+            item = self.ui.tableResult.item(filas-1,i+2)
+            self.cjZj.append(float(item.text()))
 
-    #     # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
-    #     variableSalida = min(self.valorVarSali)
-    #     vs = self.ui.tableResult.item(self.valorVarSali.index(variableSalida)+2,1).text()
-    #     textVarSal = f"V.S = {vs}"
-    #     self.ui.lblVarSaliente.setText(textVarSal)     
+        # Valida la última tabla
+        self.lastTable = self.validaLastTable(self.cjZj, self.bi)
+        print(self.lastTable)
+        if(self.lastTable == False):
+            msjErr = "Esta es la última tabla generada"
+            QMessageBox.about(self, "Error", msjErr)
+            self.ui.btnCalPibote.setEnabled(False)
+            return
         
-    #      # Obtiene el indice de la variable de salida
-    #     indexFilVariableSalida = self.valorVarSali.index(variableSalida) + 2
+        # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
+        variableEntrada = max(self.cjZj)
+        ve = self.ui.tableResult.item(1,self.cjZj.index(variableEntrada)+2).text()
+        textVarEnt = f"V.E = {ve}"
+        self.ui.lblVarEntrante.setText(textVarEnt)
+        
+        # Obtiene el indice de la variable de entrada
+        indexColVariableEntrada = self.cjZj.index(variableEntrada) + 2
+        
+        # Bucle: Obtiene los valores de la columna de la variable de entrada
+        for j in range(restriccion):
+            item = self.ui.tableResult.item(j+2,indexColVariableEntrada)
+            self.colVarEntr.append(float(item.text()))
+        
+        # Bucle: Realiza la división entre Bi y los valores de la columna de la variable de entrada
+        for k in range(restriccion):
+            try:
+                valorVarSal = float(self.bi[k]) / float(self.colVarEntr[k])
+                if(valorVarSal >= 0):
+                    self.valorVarSali.append(round(valorVarSal, 4))
+                else:
+                    self.valorVarSali.append(round(valorVarSal, 4)*-100000000)                   
+            except:
+                self.self.valorVarSali.append(100000000)
 
-    #     # Ubicamos el pibote
-    #     self.pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
-    #     textPibo = f"Pibote = {self.pibote}"
-    #     self.ui.lblPibote.setText(textPibo)   
+        # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
+        variableSalida = min(self.valorVarSali)
+        vs = self.ui.tableResult.item(self.valorVarSali.index(variableSalida)+2,1).text()
+        textVarSal = f"V.S = {vs}"
+        self.ui.lblVarSaliente.setText(textVarSal)     
+        
+         # Obtiene el indice de la variable de salida
+        indexFilVariableSalida = self.valorVarSali.index(variableSalida) + 2
+
+        # Ubicamos el pibote
+        self.pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
+        textPibo = f"Pibote = {self.pibote}"
+        self.ui.lblPibote.setText(textPibo)   
+
+        # Habilita botón siguiente tabla
+        self.ui.btnCalPibote.setEnabled(False)
+        self.ui.btnNextTabla.setEnabled(True)
         
     # Método: Genera la siguiente tabla
     def nextTable(self):
@@ -368,20 +384,9 @@ class Simplex(QDialog):
             item = self.ui.tableResult.item(filas-1,i+2)
             cjZj.append(float(item.text()))
         
-        # Valida la última tabla
-        self.lastTable = self.validaLastTable(cjZj, bi)
-        print(self.lastTable)
-        if(self.lastTable == False):
-            msjErr = "Esta es la última tabla generada"
-            QMessageBox.about(self, "Error", msjErr)
-            self.ui.btnNextTabla.setEnabled(False)
-            return
-        
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
         variableEntrada = max(cjZj)
-        ve = self.ui.tableResult.item(1,cjZj.index(variableEntrada)+2).text()
-        textVarEnt = f"V.E = {ve}"
-        self.ui.lblVarEntrante.setText(textVarEnt)
+        self.ui.lblVarEntrante.setText("")
         
         # Obtiene el indice de la variable de entrada
         self.indexColVariableEntrada = cjZj.index(variableEntrada) + 2
@@ -404,17 +409,14 @@ class Simplex(QDialog):
 
         # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
         variableSalida = min(valorVarSali)
-        vs = self.ui.tableResult.item(valorVarSali.index(variableSalida)+2,1).text()
-        textVarSal = f"V.S = {vs}"
-        self.ui.lblVarSaliente.setText(textVarSal)
+        self.ui.lblVarSaliente.setText("")
         
         # Obtiene el indice de la variable de salida
         self.indexFilVariableSalida = valorVarSali.index(variableSalida) + 2
 
         # Ubicamos el pibote
         self.pibote = float(self.ui.tableResult.item(self.indexFilVariableSalida, self.indexColVariableEntrada).text())
-        textPibo = f"Pibote = {self.pibote}"
-        self.ui.lblPibote.setText(textPibo)
+        self.ui.lblPibote.setText("")
         
         # Bucle: Obtiene las variables para reemplazar en la tabla Cb y Xb
         for rem in range(2):
@@ -490,6 +492,9 @@ class Simplex(QDialog):
             cellItem = QTableWidgetItem(str(cjZj))
             self.ui.tableResult.setItem(filas-1,colCj+2,cellItem)            
         
+        # Habilita botón calcular pibote
+        self.ui.btnCalPibote.setEnabled(True)
+        self.ui.btnNextTabla.setEnabled(False)
     # Método: Elimina los datos de la tabla
     def deleteData(self):
         # Resetea las tablas y labels
@@ -526,6 +531,7 @@ class Simplex(QDialog):
 # Inicia la aplicación
 if __name__ == '__main__':
     app = QApplication([])
+    app.setStyle(QStyleFactory.create('Fusion'))
     mi_App = Simplex()
     mi_App.show()
     sys.exit(app.exec_())
