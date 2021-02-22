@@ -1,12 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_Form(object):
     def setupUi(self, Form):
         # FORM
         Form.setObjectName("Form")
         Form.resize(1280, 720)
-        Form.setMinimumSize(QtCore.QSize(1280, 720))
+        Form.setMinimumSize(QtCore.QSize(1375, 800))
         Form.setMaximumSize(QtCore.QSize(1920, 1080))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
@@ -140,6 +139,7 @@ class Ui_Form(object):
         self.btnNextTabla.setGeometry(QtCore.QRect(120, 40, 120, 30))
         self.btnNextTabla.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnNextTabla.setObjectName("btnNextTabla")
+        self.btnNextTabla.setEnabled(False)
         # BTN NUEVO 
         self.btnNuevo = QtWidgets.QPushButton(self.groupBoxAcciones)
         self.btnNuevo.setGeometry(QtCore.QRect(260, 40, 80, 30))
@@ -189,6 +189,33 @@ class Ui_Form(object):
         self.tableResult.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
         self.tableResult.horizontalHeader().setDefaultSectionSize(75)
         self.tableResult.setStyleSheet("border: none; font-size: 16px; font-weight: bold; font-family: Century Gothic")
+        # LABEL PIBOTE
+        self.lblPibote = QtWidgets.QLabel(self.groupBoxResul)
+        self.lblPibote.setGeometry(QtCore.QRect(20, 520, 150, 40))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        self.lblPibote.setFont(font)
+        self.lblPibote.setObjectName("lblPibote")
+        # LABEL ENTRANTE
+        self.lblVarEntrante = QtWidgets.QLabel(self.groupBoxResul)
+        self.lblVarEntrante.setGeometry(QtCore.QRect(170, 520, 100, 40))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        self.lblVarEntrante.setFont(font)
+        self.lblVarEntrante.setObjectName("lblVarEntrante")
+        # LABEL SALIENTE
+        self.lblVarSaliente = QtWidgets.QLabel(self.groupBoxResul)
+        self.lblVarSaliente.setGeometry(QtCore.QRect(270, 520, 100, 40))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        self.lblVarSaliente.setFont(font)
+        self.lblVarSaliente.setObjectName("lblVarSaliente")
         
         
         self.retranslateUi(Form)
@@ -210,8 +237,7 @@ class Ui_Form(object):
         self.btnNuevo.setText(_translate("Form", "NUEVO"))
         self.btnSalir.setText(_translate("Form", "SALIR"))
         self.groupBoxResul.setTitle(_translate("Form", "Resultado"))
-
-
+        
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
