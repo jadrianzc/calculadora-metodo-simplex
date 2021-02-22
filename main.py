@@ -31,19 +31,17 @@ class Simplex(QDialog):
         self.cantRestricciones = self.ui.inputRes.value()
         
         self.tablaFuncionObjetivo(self.cantVariables)
-        self.tablaRestriccion(self.cantVariables, self.cantRestricciones)
-        # self.ui.tableFuncObj.setHorizontalHeaderLabels(nombreColum)
         for i in range(self.cantVariables):
             item1 = QTableWidgetItem(f"x{i+1}")
             item1.setBackground(QtGui.QColor(0, 0, 0))
             self.ui.tableFuncObj.setHorizontalHeaderItem(i,item1)
-            
+           
+        self.tablaRestriccion(self.cantVariables, self.cantRestricciones) 
         for j in range(self.cantVariables):
             item1 = QTableWidgetItem(f"x{j+1}")
             item1.setBackground(QtGui.QColor(0, 0, 0))
             self.ui.tableRestr.setHorizontalHeaderItem(j,item1)
 
-        # self.ui.tableRestr.setHorizontalHeaderLabels(nombreColum)
         self.ui.btnCalcular.setEnabled(True)
     
     # Método: Genera la tabla de la función objetivo
