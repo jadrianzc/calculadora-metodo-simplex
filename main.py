@@ -35,9 +35,13 @@ class Simplex(QDialog):
         # self.ui.tableFuncObj.setHorizontalHeaderLabels(nombreColum)
         for i in range(self.cantVariables):
             item1 = QTableWidgetItem(f"x{i+1}")
-            item1.setBackground(QtGui.QColor(255, 100, 0))
+            item1.setBackground(QtGui.QColor(0, 0, 0))
             self.ui.tableFuncObj.setHorizontalHeaderItem(i,item1)
-            self.ui.tableRestr.setHorizontalHeaderItem(i,item1)
+            
+        for j in range(self.cantVariables):
+            item1 = QTableWidgetItem(f"x{j+1}")
+            item1.setBackground(QtGui.QColor(0, 0, 0))
+            self.ui.tableRestr.setHorizontalHeaderItem(j,item1)
 
         # self.ui.tableRestr.setHorizontalHeaderLabels(nombreColum)
         self.ui.btnCalcular.setEnabled(True)
@@ -531,9 +535,7 @@ class Simplex(QDialog):
 # Inicia la aplicación
 if __name__ == '__main__':
     app = QApplication([])
-    app.setStyle(QStyleFactory.create('Fusion'))
+    # app.setStyle(QStyleFactory.create('Fusion'))
     mi_App = Simplex()
     mi_App.show()
     sys.exit(app.exec_())
-    
-    

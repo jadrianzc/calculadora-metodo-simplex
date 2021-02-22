@@ -97,6 +97,7 @@ class Ui_Form(object):
         self.tableFuncObj.verticalHeader().setVisible(False)
         self.tableFuncObj.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
         self.tableFuncObj.horizontalHeader().setDefaultSectionSize(50)
+        self.tableFuncObj.horizontalHeader().setStyleSheet("color: #fff")
         self.tableFuncObj.setStyleSheet("border: none; background: transparent; font-size: 16px; font-weight: bold; vertical-align: middle; font-family: Century Gothic")
         # GROUP BOX RESTRICCIONES
         self.groupBoxRestriccion = QtWidgets.QGroupBox(Form)
@@ -117,10 +118,11 @@ class Ui_Form(object):
         self.tableRestr.verticalHeader().setVisible(False)
         self.tableRestr.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
         self.tableRestr.horizontalHeader().setDefaultSectionSize(50)
+        self.tableRestr.horizontalHeader().setStyleSheet("color: #fff")
         self.tableRestr.setStyleSheet("border: none; background: transparent; font-size: 16px; font-weight: bold; vertical-align: middle; font-family: Century Gothic")
         # GROUP BOX ACCIONES
         self.groupBoxAcciones = QtWidgets.QGroupBox(Form)
-        self.groupBoxAcciones.setGeometry(QtCore.QRect(30, 630, 450, 100))
+        self.groupBoxAcciones.setGeometry(QtCore.QRect(30, 630, 450, 150))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
