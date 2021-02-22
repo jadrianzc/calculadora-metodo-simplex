@@ -178,6 +178,7 @@ class Simplex(QDialog):
         if(self.validaFuncObj == True and self.validaRestr == True):
             # Ejecutar la función para generar las tablas
             self.generarTabla(self.cantVariables, self.cantRestricciones)
+            # self.dataCurrentTable()
             
             # Deshabilita el botón calcular y generar
             self.ui.btnCalcular.setEnabled(False)
@@ -284,6 +285,66 @@ class Simplex(QDialog):
                            
         except Exception as err:
             print(f"Error f: {err}")  
+    
+    # Método: Obtener datos de la tabla actual
+    # def dataCurrentTable(self):
+    #     restriccion = self.cantRestricciones
+    #     variable = self.cantVariables
+    #     filas = self.fila
+    #     columnas = self.columna
+    #     self.cjZj = []
+    #     self.bi = []
+    #     self.colVarEntr = []
+    #     self.valorVarSali = []
+        
+    #     # Bucle: Obtiene los valores de self.Bi
+    #     for b in range(restriccion):
+    #         item = self.ui.tableResult.item(b+2, columnas-1)
+    #         self.bi.append(float(item.text())) 
+        
+    #     # Bucle: Obtiene los valores de Cj-Zj
+    #     for i in range(variable):
+    #         item = self.ui.tableResult.item(filas-1,i+2)
+    #         self.cjZj.append(float(item.text()))
+        
+    #     # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
+    #     variableEntrada = max(self.cjZj)
+    #     ve = self.ui.tableResult.item(1,self.cjZj.index(variableEntrada)+2).text()
+    #     textVarEnt = f"V.E = {ve}"
+    #     self.ui.lblVarEntrante.setText(textVarEnt)
+        
+    #     # Obtiene el indice de la variable de entrada
+    #     indexColVariableEntrada = self.cjZj.index(variableEntrada) + 2
+        
+    #     # Bucle: Obtiene los valores de la columna de la variable de entrada
+    #     for j in range(restriccion):
+    #         item = self.ui.tableResult.item(j+2,indexColVariableEntrada)
+    #         self.colVarEntr.append(float(item.text()))
+        
+    #     # Bucle: Realiza la división entre Bi y los valores de la columna de la variable de entrada
+    #     for k in range(restriccion):
+    #         try:
+    #             valorVarSal = float(self.bi[k]) / float(self.colVarEntr[k])
+    #             if(valorVarSal >= 0):
+    #                 self.valorVarSali.append(round(valorVarSal, 4))
+    #             else:
+    #                 self.valorVarSali.append(round(valorVarSal, 4)*-100000000)                   
+    #         except:
+    #             self.self.valorVarSali.append(100000000)
+
+    #     # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
+    #     variableSalida = min(self.valorVarSali)
+    #     vs = self.ui.tableResult.item(self.valorVarSali.index(variableSalida)+2,1).text()
+    #     textVarSal = f"V.S = {vs}"
+    #     self.ui.lblVarSaliente.setText(textVarSal)     
+        
+    #      # Obtiene el indice de la variable de salida
+    #     indexFilVariableSalida = self.valorVarSali.index(variableSalida) + 2
+
+    #     # Ubicamos el pibote
+    #     self.pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
+    #     textPibo = f"Pibote = {self.pibote}"
+    #     self.ui.lblPibote.setText(textPibo)   
         
     # Método: Genera la siguiente tabla
     def nextTable(self):
@@ -297,7 +358,7 @@ class Simplex(QDialog):
         bi = []
         valorVarSali = []
         
-        # Bucle: Obtiene los valores de Bi
+        #Bucle: Obtiene los valores de Bi
         for b in range(restriccion):
             item = self.ui.tableResult.item(b+2, columnas-1)
             bi.append(float(item.text())) 
@@ -323,11 +384,11 @@ class Simplex(QDialog):
         self.ui.lblVarEntrante.setText(textVarEnt)
         
         # Obtiene el indice de la variable de entrada
-        indexColVariableEntrada = cjZj.index(variableEntrada) + 2
+        self.indexColVariableEntrada = cjZj.index(variableEntrada) + 2
         
         # Bucle: Obtiene los valores de la columna de la variable de entrada
         for j in range(restriccion):
-            item = self.ui.tableResult.item(j+2,indexColVariableEntrada)
+            item = self.ui.tableResult.item(j+2,self.indexColVariableEntrada)
             colVarEntr.append(float(item.text()))
         
         # Bucle: Realiza la división entre Bi y los valores de la columna de la variable de entrada
@@ -348,29 +409,29 @@ class Simplex(QDialog):
         self.ui.lblVarSaliente.setText(textVarSal)
         
         # Obtiene el indice de la variable de salida
-        indexFilVariableSalida = valorVarSali.index(variableSalida) + 2
+        self.indexFilVariableSalida = valorVarSali.index(variableSalida) + 2
 
         # Ubicamos el pibote
-        pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
-        textPibo = f"Pibote = {pibote}"
+        self.pibote = float(self.ui.tableResult.item(self.indexFilVariableSalida, self.indexColVariableEntrada).text())
+        textPibo = f"Pibote = {self.pibote}"
         self.ui.lblPibote.setText(textPibo)
         
         # Bucle: Obtiene las variables para reemplazar en la tabla Cb y Xb
         for rem in range(2):
-            item = self.ui.tableResult.item(rem,indexColVariableEntrada)
+            item = self.ui.tableResult.item(rem,self.indexColVariableEntrada)
             cellItem = QTableWidgetItem(item.text())
-            self.ui.tableResult.setItem(indexFilVariableSalida,rem,cellItem)
+            self.ui.tableResult.setItem(self.indexFilVariableSalida,rem,cellItem)
         
         # Bucle: Obtiene la fila pibote
         for p in range(variable+restriccion+1):
-            item = self.ui.tableResult.item(indexFilVariableSalida,p+2)
+            item = self.ui.tableResult.item(self.indexFilVariableSalida,p+2)
             filVarSali.append(float(item.text()))
         
         # Bucle: Divide la fila pibote por el pibote
         filaPibote = []
         for new in filVarSali:
             try:
-                item = float(new) / pibote
+                item = float(new) / self.pibote
                 filaPibote.append(round(item,4))
             except:
                 filaPibote.append(0)
@@ -379,18 +440,18 @@ class Simplex(QDialog):
         control = False
         for nwFila in range(len(colVarEntr)):
             valBi = float(self.ui.tableResult.item(nwFila+2,columnas-1).text()) 
-            valBiCompare = float(self.ui.tableResult.item(indexFilVariableSalida,columnas-1).text())
+            valBiCompare = float(self.ui.tableResult.item(self.indexFilVariableSalida,columnas-1).text())
 
             div = valBi / colVarEntr[nwFila]
-            divCompare = valBiCompare / pibote
+            divCompare = valBiCompare / self.pibote
             
-            if(float(colVarEntr[nwFila]) == pibote and div <= divCompare and control == False):
+            if(float(colVarEntr[nwFila]) == self.pibote and div <= divCompare and control == False):
                 control = True
                 for p in range(variable+restriccion+1):
                     item = float(filaPibote[p])
                     pibote = round(item,4)
                     cellItem = QTableWidgetItem(str(pibote))
-                    self.ui.tableResult.setItem(indexFilVariableSalida,p+2,cellItem)
+                    self.ui.tableResult.setItem(self.indexFilVariableSalida,p+2,cellItem)
                     
             else:
                 for p in range(variable+restriccion+1):
