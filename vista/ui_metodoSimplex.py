@@ -169,7 +169,7 @@ class Ui_Form(object):
         self.btnNextTabla.setEnabled(False)
         # GROUP BOX RESULTADO
         self.groupBoxResul = QtWidgets.QGroupBox(Form)
-        self.groupBoxResul.setGeometry(QtCore.QRect(550, 10, 790, 719))
+        self.groupBoxResul.setGeometry(QtCore.QRect(550, 10, 790, 739))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -220,7 +220,7 @@ class Ui_Form(object):
         self.lblPibote.setStyleSheet("border: none; font-size: 18px")
         # GROUP BOX RESPUESTA
         self.groupBoxRespuesta = QtWidgets.QGroupBox(self.groupBoxResul)
-        self.groupBoxRespuesta.setGeometry(QtCore.QRect(20, 600, 750, 100))
+        self.groupBoxRespuesta.setGeometry(QtCore.QRect(20, 600, 750, 130))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -239,6 +239,16 @@ class Ui_Form(object):
         self.lblRespuesta.setFont(font)
         self.lblRespuesta.setObjectName("lblRespuesta")
         self.lblRespuesta.setStyleSheet("border: none; font-size: 18px")
+        # LABEL TOTAL TABLAS
+        self.lblTotalTable = QtWidgets.QTextBrowser(self.groupBoxRespuesta)
+        self.lblTotalTable.setGeometry(QtCore.QRect(20, 80, 700, 40))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        self.lblTotalTable.setFont(font)
+        self.lblTotalTable.setObjectName("lblTotalTable")
+        self.lblTotalTable.setStyleSheet("border: none; font-size: 18px")
         
         
         self.retranslateUi(Form)

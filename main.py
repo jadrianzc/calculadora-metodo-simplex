@@ -202,6 +202,7 @@ class Simplex(QDialog):
         if(self.validaFuncObj == True and self.validaRestr == True):
             self.countClick = 1
             self.allTable = []
+            self.fullTable = []
             
             # Ejecutar la función para generar las tablas
             self.generarTabla(self.cantVariables, self.cantRestricciones)
@@ -245,6 +246,8 @@ class Simplex(QDialog):
             self.ui.groupBoxRespuesta.setHidden(False)
             self.ui.lblRespuesta.setText(result)
             self.ui.lblRespuesta.setAlignment(Qt.AlignCenter)
+            self.ui.lblTotalTable.setText(f"Total Tablas = {len(self.allTable)+ 1}")
+            self.ui.lblTotalTable.setAlignment(Qt.AlignRight)
             return False
         else:
             return True
@@ -424,11 +427,11 @@ class Simplex(QDialog):
         # Valida la última tabla
         self.lastTable = self.validaLastTable(cjZj, bi)
         if(self.lastTable == False):
-            msjErr = "Esta es la última tabla generada"
+            msjErr = "Última tabla generada"
             msgBox4 = QMessageBox()
             msgBox4.setText(msjErr)
-            msgBox4.setWindowTitle("Error")
-            msgBox4.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+            msgBox4.setWindowTitle("Éxito")
+            msgBox4.setWindowIcon(QIcon("vista/img/check.ico"))
             msgBox4.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox4.exec_()
             self.ui.btnCalPibote.setEnabled(False)
