@@ -11,10 +11,10 @@ class Ui_Form(object):
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         Form.setFont(font)
-        Form.setStyleSheet("background: #fff; font-size: 14px; font-weight: bold; font-family: Century Gothic")
+        Form.setStyleSheet("background: #FEFEFE; font-size: 14px; font-weight: bold; font-family: Century Gothic")
         # GROUP BOX DATOS
         self.groupBoxDatos = QtWidgets.QGroupBox(Form)
-        self.groupBoxDatos.setGeometry(QtCore.QRect(30, 10, 450, 171))
+        self.groupBoxDatos.setGeometry(QtCore.QRect(30, 0, 450, 171))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -76,7 +76,7 @@ class Ui_Form(object):
         self.btnGenerar.setObjectName("btnGenerar")
         # GROUP BOX FUNCIÓN OBJETIVA
         self.groupBoxFuncObj = QtWidgets.QGroupBox(Form)
-        self.groupBoxFuncObj.setGeometry(QtCore.QRect(30, 200, 450, 135))
+        self.groupBoxFuncObj.setGeometry(QtCore.QRect(30, 185, 450, 135))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -104,7 +104,7 @@ class Ui_Form(object):
         self.tableFuncObj.setStyleSheet("border: none; font-size: 16px")
         # GROUP BOX RESTRICCIONES
         self.groupBoxRestriccion = QtWidgets.QGroupBox(Form)
-        self.groupBoxRestriccion.setGeometry(QtCore.QRect(30, 350, 450, 260))
+        self.groupBoxRestriccion.setGeometry(QtCore.QRect(30, 335, 450, 260))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -125,7 +125,7 @@ class Ui_Form(object):
         self.tableRestr.setStyleSheet("border: none; font-size: 16px")
         # GROUP BOX ACCIONES
         self.groupBoxAcciones = QtWidgets.QGroupBox(Form)
-        self.groupBoxAcciones.setGeometry(QtCore.QRect(30, 625, 450, 124))
+        self.groupBoxAcciones.setGeometry(QtCore.QRect(30, 605, 440, 124))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -169,7 +169,7 @@ class Ui_Form(object):
         self.btnNextTabla.setEnabled(False)
         # GROUP BOX RESULTADO
         self.groupBoxResul = QtWidgets.QGroupBox(Form)
-        self.groupBoxResul.setGeometry(QtCore.QRect(550, 10, 790, 739))
+        self.groupBoxResul.setGeometry(QtCore.QRect(550, 0, 790, 729))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)

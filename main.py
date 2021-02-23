@@ -37,14 +37,14 @@ class Simplex(QDialog):
         
         for i in range(self.cantVariables):
             item1 = QTableWidgetItem(f"x{i+1}")
-            item1.setBackground(QtGui.QColor(0, 0, 0))
+            item1.setBackground(QtGui.QColor(22, 20, 90))
             self.ui.tableFuncObj.setHorizontalHeaderItem(i,item1)
            
         self.tablaRestriccion(self.cantVariables, self.cantRestricciones) 
         
         for j in range(self.cantVariables):
             item1 = QTableWidgetItem(f"x{j+1}")
-            item1.setBackground(QtGui.QColor(0, 0, 0))
+            item1.setBackground(QtGui.QColor(22, 20, 90))
             self.ui.tableRestr.setHorizontalHeaderItem(j,item1)
 
         self.ui.btnCalcular.setEnabled(True)
@@ -234,6 +234,7 @@ class Simplex(QDialog):
             for indBi in range(len(bi)):
                 newBi = round(bi[indBi],1)
                 cellItem = QTableWidgetItem(str(newBi))
+                cellItem.setBackground(QtGui.QColor(239, 239, 239))
                 self.ui.tableResult.setItem(indBi+2,self.columna-1,cellItem)
                 
                 item = self.ui.tableResult.item(indBi+2, 1).text()  
@@ -263,7 +264,7 @@ class Simplex(QDialog):
         # Genera las filas y columnas
         self.ui.tableResult.setRowCount(fil)
         self.ui.tableResult.setColumnCount(col)
-        
+
         try:
             incremento3 = 0
             for f in range(fil):
@@ -275,6 +276,7 @@ class Simplex(QDialog):
                     # Valida primera fila
                     if((f == 0 and c == 0) or (f == 0 and c == col-1) or (f == fil-1 and c == 0) or (f == fil-1 and c == col-1) or (f == fil-2 and c == 0)):
                         item = ""
+                        
                     elif(f == 0 and c == 1):
                         item = "Cj"
                     elif(f == 0 and (c != 0 or c != 1)):
@@ -319,6 +321,7 @@ class Simplex(QDialog):
                             item = f"{self.matrizRestrNum[newFila][newColu]}"
                     
                     cellItem = QTableWidgetItem(item)
+                    cellItem.setBackground(QtGui.QColor(239, 239, 239))
                     self.ui.tableResult.setItem(f,c,cellItem)
                     self.ui.tableResult.setStyleSheet("border: none; font-size: 16px")
                            
@@ -362,8 +365,8 @@ class Simplex(QDialog):
         
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
         variableEntrada = max(self.cjZj)
-        ve = self.ui.tableResult.item(1,self.cjZj.index(variableEntrada)+2).text()
-        
+        ve = self.ui.tableResult.item(1,self.cjZj.index(variableEntrada)+2).text() 
+
         # Obtiene el indice de la variable de entrada
         indexColVariableEntrada = self.cjZj.index(variableEntrada) + 2
         
@@ -385,14 +388,18 @@ class Simplex(QDialog):
 
         # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
         variableSalida = min(self.valorVarSali)
-        vs = self.ui.tableResult.item(self.valorVarSali.index(variableSalida)+2,1).text()  
+        vs = self.ui.tableResult.item(self.valorVarSali.index(variableSalida)+2,1).text()
         
          # Obtiene el indice de la variable de salida
         indexFilVariableSalida = self.valorVarSali.index(variableSalida) + 2
 
         # Ubicamos el pibote
-        self.pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text()) 
-        
+        self.pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
+
+        pibo = QTableWidgetItem(str(self.pibote))
+        pibo.setBackground(QtGui.QColor(187, 187, 225))
+        self.ui.tableResult.setItem(indexFilVariableSalida,indexColVariableEntrada,pibo)
+
         # Muestra los datos del pibote, v.e, v.s de la fila actual
         text = f"Pibote = {self.pibote}    V.E = {ve}    V.S = {vs}"
         self.ui.lblPibote.setText(text)
@@ -410,7 +417,7 @@ class Simplex(QDialog):
         filVarSali = []
         bi = []
         valorVarSali = []
-        
+
         #Bucle: Obtiene los valores de Bi
         for b in range(restriccion):
             item = self.ui.tableResult.item(b+2, columnas-1)
@@ -486,6 +493,7 @@ class Simplex(QDialog):
         for rem in range(2):
             item = self.ui.tableResult.item(rem,self.indexColVariableEntrada)
             cellItem = QTableWidgetItem(item.text())
+            cellItem.setBackground(QtGui.QColor(239, 239, 239))
             self.ui.tableResult.setItem(self.indexFilVariableSalida,rem,cellItem)
         
         # Bucle: Obtiene la fila pibote
@@ -518,6 +526,7 @@ class Simplex(QDialog):
                         item = float(filaPibote[p])
                         pibote = round(item,4)
                         cellItem = QTableWidgetItem(str(pibote))
+                        cellItem.setBackground(QtGui.QColor(239, 239, 239))
                         self.ui.tableResult.setItem(self.indexFilVariableSalida,p+2,cellItem)
                         
                 else:
@@ -531,6 +540,7 @@ class Simplex(QDialog):
                         suma = round(suma, 4)
                         # Inserta los nuevos valores
                         cellItem = QTableWidgetItem(str(suma))
+                        cellItem.setBackground(QtGui.QColor(239, 239, 239))
                         self.ui.tableResult.setItem(nwFila+2,p+2,cellItem)
             except Exception as err:
                 print(f"Error Generar Nuevas Filas: {err}")
@@ -548,6 +558,7 @@ class Simplex(QDialog):
                 zj = round(zj,4)
             
             cellItem = QTableWidgetItem(str(zj))
+            cellItem.setBackground(QtGui.QColor(239, 239, 239))
             self.ui.tableResult.setItem(filas-2,uF+2,cellItem)
         
         # Bucle: Genera los nuevos valores de Cj-Zj
@@ -557,6 +568,7 @@ class Simplex(QDialog):
             cjZj = cj - zj
             cjZj = round(cjZj,4)
             cellItem = QTableWidgetItem(str(cjZj))
+            cellItem.setBackground(QtGui.QColor(239, 239, 239))
             self.ui.tableResult.setItem(filas-1,colCj+2,cellItem)            
         
     # Método: Obtiene la tabla anterior
@@ -570,6 +582,7 @@ class Simplex(QDialog):
                 for c in range(self.columna):
                     item = self.allTable[len(self.allTable)-1][f][c]
                     cellItem = QTableWidgetItem(item)
+                    cellItem.setBackground(QtGui.QColor(239, 239, 239))
                     self.ui.tableResult.setItem(f,c,cellItem)    
             self.allTable.pop()
         else:
