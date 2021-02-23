@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 from vista.ui_metodoSimplex import Ui_Form
 import numpy as np
 import sys, re, math
@@ -31,12 +32,14 @@ class Simplex(QDialog):
         self.cantRestricciones = self.ui.inputRes.value()
         
         self.tablaFuncionObjetivo(self.cantVariables)
+        
         for i in range(self.cantVariables):
             item1 = QTableWidgetItem(f"x{i+1}")
             item1.setBackground(QtGui.QColor(0, 0, 0))
             self.ui.tableFuncObj.setHorizontalHeaderItem(i,item1)
            
         self.tablaRestriccion(self.cantVariables, self.cantRestricciones) 
+        
         for j in range(self.cantVariables):
             item1 = QTableWidgetItem(f"x{j+1}")
             item1.setBackground(QtGui.QColor(0, 0, 0))
@@ -95,6 +98,8 @@ class Simplex(QDialog):
             
             # Crea un label con la función objetivo
             self.ui.lblMaxZ.setText(funcObj)
+            self.ui.lblMaxZ.setAlignment(Qt.AlignCenter)
+            self.ui.lblMaxZ.setStyleSheet("border: 1px solid #000; font-size: 18px")
             
         except Exception as err:
             print(f"Error: {err}")
@@ -168,10 +173,11 @@ class Simplex(QDialog):
             for matriz in range(len(matrizRestr)):
                 string = " + ".join(matrizRestr[matriz][0])
                 sr = f"{string} {matrizRestr[matriz][1]} {matrizRestr[matriz][2]}"
-                sujRestr += f"\t{sr}\n"
+                sujRestr += f"   {sr}\n"
             
             # Crea un label con la función objetivo
             self.ui.lblRestricc.setText(sujRestr)
+            self.ui.lblRestricc.setStyleSheet("border: 1px solid #000; font-size: 18px")
                     
         except Exception as err:
             print(f"Error: {err}")
@@ -533,7 +539,7 @@ class Simplex(QDialog):
 # Inicia la aplicación
 if __name__ == '__main__':
     app = QApplication([])
-    # app.setStyle(QStyleFactory.create('Fusion'))
+    app.setStyle(QStyleFactory.create('Fusion'))
     mi_App = Simplex()
     mi_App.show()
     sys.exit(app.exec_())
