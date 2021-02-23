@@ -607,6 +607,7 @@ class Simplex(QDialog):
         self.ui.btnCalcular.setEnabled(False)
         self.ui.btnNextTabla.setEnabled(False)
         self.ui.btnPreviousTabla.setEnabled(False)
+        self.ui.btnCalPibote.setEnabled(False)
         
         # Habilita las tablas 
         self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.AllEditTriggers)
@@ -625,110 +626,110 @@ class Simplex(QDialog):
         app = QApplication([])
         sys.exit(app.exec_())
 
-    def generarReporte(self):
-        text, ok = QInputDialog.getText(self, 'Generar Reporte','Ingrese el nombre de quien genera el reporte:')
+    # def generarReporte(self):
+    #     text, ok = QInputDialog.getText(self, 'Generar Reporte','Ingrese el nombre de quien genera el reporte:')
 
-        if ok:
-            numRestriccion = int(self.ui.numRestricciones.value())
+    #     if ok:
+    #         numRestriccion = int(self.ui.numRestricciones.value())
             
-        try:
-            Fila1 = []
-            Fila2 = []
-            Fila3 = []
-            Fila4 = []
-            Fila5 = []
-            Fila6 = []
+    #     try:
+    #         Fila1 = []
+    #         Fila2 = []      162
+    #         Fila3 = []
+    #         Fila4 = []
+    #         Fila5 = []
+    #         Fila6 = []
 
-            for i in range(7):
-                #Extrae los valores de la fila 0
-                itemFila0 = self.ui.matriz.item(0,i).text()
-                Fila1.append(itemFila0)
-                #Extrae los valores de la fila 1
-                itemFila1 = self.ui.matriz.item(1,i).text()
-                Fila2.append(itemFila1)
-                if i >= 2:
-                    #Extrae los valores de la fila 2
-                    itemFila2 = float(self.ui.matriz.item(2,i).text())
-                    Fila3.append("{:.3f}".format(itemFila2))
-                    #Extrae los valores de la fila 3
-                    itemFila3 = float(self.ui.matriz.item(3,i).text())
-                    Fila4.append("{:.3f}".format(itemFila3))
-                    #Extrae los valores de la fila 4
-                    itemFila4 = float(self.ui.matriz.item(4,i).text())
-                    Fila5.append("{:.3f}".format(itemFila4))
-                    if i == 6:
-                        #Extrae los valores de la fila 5
-                        itemFila5 = self.ui.matriz.item(5,i).text()
-                        Fila6.append(itemFila5)
-                    else:
-                        #Extrae los valores de la fila 5
-                        itemFila5 = float(self.ui.matriz.item(5,i).text())
-                        Fila6.append("{:.3f}".format(itemFila5))
+    #         for i in range(7):
+    #             #Extrae los valores de la fila 0
+    #             itemFila0 = self.ui.matriz.item(0,i).text()
+    #             Fila1.append(itemFila0)
+    #             #Extrae los valores de la fila 1
+    #             itemFila1 = self.ui.matriz.item(1,i).text()
+    #             Fila2.append(itemFila1)
+    #             if i >= 2:
+    #                 #Extrae los valores de la fila 2
+    #                 itemFila2 = float(self.ui.matriz.item(2,i).text())
+    #                 Fila3.append("{:.3f}".format(itemFila2))
+    #                 #Extrae los valores de la fila 3
+    #                 itemFila3 = float(self.ui.matriz.item(3,i).text())
+    #                 Fila4.append("{:.3f}".format(itemFila3))
+    #                 #Extrae los valores de la fila 4
+    #                 itemFila4 = float(self.ui.matriz.item(4,i).text())
+    #                 Fila5.append("{:.3f}".format(itemFila4))
+    #                 if i == 6:
+    #                     #Extrae los valores de la fila 5
+    #                     itemFila5 = self.ui.matriz.item(5,i).text()
+    #                     Fila6.append(itemFila5)
+    #                 else:
+    #                     #Extrae los valores de la fila 5
+    #                     itemFila5 = float(self.ui.matriz.item(5,i).text())
+    #                     Fila6.append("{:.3f}".format(itemFila5))
                     
 
-                else:
-                    #Extrae los valores de la fila 2
-                    itemFila2 = self.ui.matriz.item(2,i).text()
-                    Fila3.append(itemFila2)
-                    #Extrae los valores de la fila 3
-                    itemFila3 = self.ui.matriz.item(3,i).text()
-                    Fila4.append(itemFila3)
-                    #Extrae los valores de la fila 4
-                    itemFila4 = self.ui.matriz.item(4,i).text()
-                    Fila5.append(itemFila4)
-                    #Extrae los valores de la fila 5
-                    itemFila5 = self.ui.matriz.item(5,i).text()
-                    Fila6.append(itemFila5)
+    #             else:
+    #                 #Extrae los valores de la fila 2
+    #                 itemFila2 = self.ui.matriz.item(2,i).text()
+    #                 Fila3.append(itemFila2)
+    #                 #Extrae los valores de la fila 3
+    #                 itemFila3 = self.ui.matriz.item(3,i).text()
+    #                 Fila4.append(itemFila3)
+    #                 #Extrae los valores de la fila 4
+    #                 itemFila4 = self.ui.matriz.item(4,i).text()
+    #                 Fila5.append(itemFila4)
+    #                 #Extrae los valores de la fila 5
+    #                 itemFila5 = self.ui.matriz.item(5,i).text()
+    #                 Fila6.append(itemFila5)
 
-            funcion = self.ui.label_funObj.text()
-            funcion_objetivo = f'Max {funcion}'
-            print(funcion_objetivo)   
+    #         funcion = self.ui.label_funObj.text()
+    #         funcion_objetivo = f'Max {funcion}'
+    #         print(funcion_objetivo)   
 
-            resultado1 = self.ui.label_varEntra.text()
-            resultado2 = self.ui.label_varSale.text()
-            resultado3 = self.ui.valorZ.text()
+    #         resultado1 = self.ui.label_varEntra.text()
+    #         resultado2 = self.ui.label_varSale.text()
+    #         resultado3 = self.ui.valorZ.text()
 
-            doc = SimpleDocTemplate("Reporte_Simplex2.pdf", pagesize = A4, topMargin=12)
-            alineacionTitulo = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=20, leading=40)
-            alineacionAutor = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=11, leading=40)
-            alineacionResultados = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=30)
-            alineacionFuncion = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=40)
+    #         doc = SimpleDocTemplate("Reporte_Simplex2.pdf", pagesize = A4, topMargin=12)
+    #         alineacionTitulo = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=20, leading=40)
+    #         alineacionAutor = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=11, leading=40)
+    #         alineacionResultados = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=30)
+    #         alineacionFuncion = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=40)
 
-            story=[]
-            t = Table([
-                    Fila1, 
-                    Fila2, 
-                    Fila3,
-                    Fila4,
-                    Fila5,
-                    Fila6
-                ], colWidths=45, rowHeights=30)
+    #         story=[]
+    #         t = Table([
+    #                 Fila1, 
+    #                 Fila2, 
+    #                 Fila3,
+    #                 Fila4,
+    #                 Fila5,
+    #                 Fila6
+    #             ], colWidths=45, rowHeights=30)
 
-            t.setStyle([
-                        ('GRID',(0,0),(-1,-1),0.5,colors.grey),
-                        ('BOX',(0,0),(-1,-1),2,colors.black),
-                        ('BACKGROUND', (0, 2), (-1, 0), colors.lightgreen),
-                        ('BACKGROUND', (1, 0), (1, 6), colors.lightgreen),
-                        ('BACKGROUND', (6, 4), (6, 4), colors.lightskyblue),
-                ])
-            titulo = "Reporte Método Simplex"
-            autor = f'Autor:  {text}'
-            story.append(Image('logo.png'))
-            story.append(Paragraph(titulo, alineacionTitulo))
-            story.append(Paragraph(autor, alineacionAutor))
-            story.append(Paragraph(funcion_objetivo, alineacionFuncion))
-            story.append(Paragraph(resultado1, alineacionResultados))
-            story.append(Paragraph(resultado2, alineacionResultados))
-            story.append(Paragraph(resultado3, alineacionResultados))
-            story.append(t)                
-            story.append(Spacer(0,15))
-            doc.build(story)
-            os.system("Reporte_Simplex2.pdf")
+    #         t.setStyle([
+    #                     ('GRID',(0,0),(-1,-1),0.5,colors.grey),
+    #                     ('BOX',(0,0),(-1,-1),2,colors.black),
+    #                     ('BACKGROUND', (0, 2), (-1, 0), colors.lightgreen),
+    #                     ('BACKGROUND', (1, 0), (1, 6), colors.lightgreen),
+    #                     ('BACKGROUND', (6, 4), (6, 4), colors.lightskyblue),
+    #             ])
+    #         titulo = "Reporte Método Simplex"
+    #         autor = f'Autor:  {text}'
+    #         story.append(Image('logo.png'))
+    #         story.append(Paragraph(titulo, alineacionTitulo))
+    #         story.append(Paragraph(autor, alineacionAutor))
+    #         story.append(Paragraph(funcion_objetivo, alineacionFuncion))
+    #         story.append(Paragraph(resultado1, alineacionResultados))
+    #         story.append(Paragraph(resultado2, alineacionResultados))
+    #         story.append(Paragraph(resultado3, alineacionResultados))
+    #         story.append(t)                
+    #         story.append(Spacer(0,15))
+    #         doc.build(story)
+    #         os.system("Reporte_Simplex2.pdf")
 
         
-            print("Se genero el reporte")
-        except PermissionError:
-            print("No se genero el PDF")
+    #         print("Se genero el reporte")
+    #     except PermissionError:
+    #         print("No se genero el PDF")
 
 
 # Inicia la aplicación
