@@ -206,34 +206,38 @@ class Ui_Form(object):
         self.tableResult.horizontalHeader().setVisible(False)
         self.tableResult.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
         self.tableResult.horizontalHeader().setDefaultSectionSize(75)
-        self.tableResult.setStyleSheet("border: 1px solid #000; font-size: 16px")
+        self.tableResult.setStyleSheet("border: none")
         # LABEL PIBOTE
-        self.lblPibote = QtWidgets.QLabel(self.groupBoxResul)
-        self.lblPibote.setGeometry(QtCore.QRect(20, 540, 150, 40))
+        self.lblPibote = QtWidgets.QTextBrowser(self.groupBoxResul)
+        self.lblPibote.setGeometry(QtCore.QRect(20, 540, 750, 40))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(12)
         font.setBold(True)
         self.lblPibote.setFont(font)
         self.lblPibote.setObjectName("lblPibote")
-        # LABEL ENTRANTE
-        self.lblVarEntrante = QtWidgets.QLabel(self.groupBoxResul)
-        self.lblVarEntrante.setGeometry(QtCore.QRect(170, 540, 100, 40))
+        self.lblPibote.setStyleSheet("border: none; font-size: 18px")
+        # GROUP BOX RESPUESTA
+        self.groupBoxRespuesta = QtWidgets.QGroupBox(self.groupBoxResul)
+        self.groupBoxRespuesta.setGeometry(QtCore.QRect(20, 600, 750, 100))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBoxRespuesta.setFont(font)
+        self.groupBoxRespuesta.setObjectName("groupBoxRespuesta")
+        self.groupBoxRespuesta.setHidden(True)
+        # LABEL RESPUESTA
+        self.lblRespuesta = QtWidgets.QTextBrowser(self.groupBoxRespuesta)
+        self.lblRespuesta.setGeometry(QtCore.QRect(20, 40, 700, 40))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(12)
         font.setBold(True)
-        self.lblVarEntrante.setFont(font)
-        self.lblVarEntrante.setObjectName("lblVarEntrante")
-        # LABEL SALIENTE
-        self.lblVarSaliente = QtWidgets.QLabel(self.groupBoxResul)
-        self.lblVarSaliente.setGeometry(QtCore.QRect(270, 540, 100, 40))
-        font = QtGui.QFont()
-        font.setFamily("Century Gothic")
-        font.setPointSize(12)
-        font.setBold(True)
-        self.lblVarSaliente.setFont(font)
-        self.lblVarSaliente.setObjectName("lblVarSaliente")
+        self.lblRespuesta.setFont(font)
+        self.lblRespuesta.setObjectName("lblRespuesta")
+        self.lblRespuesta.setStyleSheet("border: none; font-size: 18px")
         
         
         self.retranslateUi(Form)
@@ -257,6 +261,7 @@ class Ui_Form(object):
         self.btnNuevo.setText(_translate("Form", "NUEVO"))
         self.btnSalir.setText(_translate("Form", "SALIR"))
         self.groupBoxResul.setTitle(_translate("Form", "Resultado"))
+        self.groupBoxRespuesta.setTitle(_translate("Form", "Respuesta"))
         
 if __name__ == "__main__":
     import sys

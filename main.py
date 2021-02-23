@@ -24,6 +24,7 @@ class Simplex(QDialog):
         self.ui.btnNuevo.clicked.connect(self.deleteData)
         self.ui.btnCalPibote.clicked.connect(self.dataCurrentTable)
         self.ui.btnNextTabla.clicked.connect(self.nextTable)
+        self.ui.btnPreviousTabla.clicked.connect(self.previousTable)
         self.ui.btnSalir.clicked.connect(self.exitApp)
         
     # Método: Genera las matrices para ingresar la cantidad de variables y restricciones
@@ -99,7 +100,7 @@ class Simplex(QDialog):
             # Crea un label con la función objetivo
             self.ui.lblMaxZ.setText(funcObj)
             self.ui.lblMaxZ.setAlignment(Qt.AlignCenter)
-            self.ui.lblMaxZ.setStyleSheet("border: 1px solid #000; font-size: 18px")
+            self.ui.lblMaxZ.setStyleSheet("border: none; font-size: 18px")
             
         except Exception as err:
             print(f"Error: {err}")
@@ -177,7 +178,8 @@ class Simplex(QDialog):
             
             # Crea un label con la función objetivo
             self.ui.lblRestricc.setText(sujRestr)
-            self.ui.lblRestricc.setStyleSheet("border: 1px solid #000; font-size: 18px")
+            self.ui.lblRestricc.setAlignment(Qt.AlignVCenter)
+            self.ui.lblRestricc.setStyleSheet("border: none; font-size: 18px")
                     
         except Exception as err:
             print(f"Error: {err}")
@@ -188,14 +190,16 @@ class Simplex(QDialog):
     # Método: Valida los campos de función objetivo y de restricciones
     def validarTabla(self):
         if(self.validaFuncObj == True and self.validaRestr == True):
+            self.countClick = 1
+            self.allTable = []
+            
             # Ejecutar la función para generar las tablas
             self.generarTabla(self.cantVariables, self.cantRestricciones)
-            # self.dataCurrentTable()
             
             # Deshabilita el botón calcular y generar
             self.ui.btnCalcular.setEnabled(False)
             self.ui.btnGenerar.setEnabled(False)
-            # self.ui.btnNextTabla.setEnabled(True)
+            self.ui.btnNextTabla.setEnabled(True)
             self.ui.btnCalPibote.setEnabled(True)
             
             # Deshabilita las tablas
@@ -212,15 +216,24 @@ class Simplex(QDialog):
             if(valor <= 0):
                 count += 1
         
+        result = ""
         if(count == len(cjZj)):
             bi.append(z)
             for indBi in range(len(bi)):
                 newBi = round(bi[indBi],1)
                 cellItem = QTableWidgetItem(str(newBi))
                 self.ui.tableResult.setItem(indBi+2,self.columna-1,cellItem)
+                
+                item = self.ui.tableResult.item(indBi+2, 1).text()  
+                
+                if(indBi == len(bi)-1):
+                    result += f"{item} = {newBi}"
+                else:
+                    result += f"{item} = {newBi} || "
             
-
-
+            self.ui.groupBoxRespuesta.setHidden(False)
+            self.ui.lblRespuesta.setText(result)
+            self.ui.lblRespuesta.setAlignment(Qt.AlignCenter)
             return False
         else:
             return True
@@ -293,6 +306,7 @@ class Simplex(QDialog):
                     
                     cellItem = QTableWidgetItem(item)
                     self.ui.tableResult.setItem(f,c,cellItem)
+                    self.ui.tableResult.setStyleSheet("border: none; font-size: 16px")
                            
         except Exception as err:
             print(f"Error f: {err}")  
@@ -325,13 +339,12 @@ class Simplex(QDialog):
             msjErr = "Esta es la última tabla generada"
             QMessageBox.about(self, "Error", msjErr)
             self.ui.btnCalPibote.setEnabled(False)
+            self.ui.btnNextTabla.setEnabled(False)
             return
         
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
         variableEntrada = max(self.cjZj)
         ve = self.ui.tableResult.item(1,self.cjZj.index(variableEntrada)+2).text()
-        textVarEnt = f"V.E = {ve}"
-        self.ui.lblVarEntrante.setText(textVarEnt)
         
         # Obtiene el indice de la variable de entrada
         indexColVariableEntrada = self.cjZj.index(variableEntrada) + 2
@@ -354,21 +367,18 @@ class Simplex(QDialog):
 
         # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
         variableSalida = min(self.valorVarSali)
-        vs = self.ui.tableResult.item(self.valorVarSali.index(variableSalida)+2,1).text()
-        textVarSal = f"V.S = {vs}"
-        self.ui.lblVarSaliente.setText(textVarSal)     
+        vs = self.ui.tableResult.item(self.valorVarSali.index(variableSalida)+2,1).text()  
         
          # Obtiene el indice de la variable de salida
         indexFilVariableSalida = self.valorVarSali.index(variableSalida) + 2
 
         # Ubicamos el pibote
-        self.pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text())
-        textPibo = f"Pibote = {self.pibote}"
-        self.ui.lblPibote.setText(textPibo)   
-
-        # Habilita botón siguiente tabla
-        self.ui.btnCalPibote.setEnabled(False)
-        self.ui.btnNextTabla.setEnabled(True)
+        self.pibote = float(self.ui.tableResult.item(indexFilVariableSalida, indexColVariableEntrada).text()) 
+        
+        # Muestra los datos del pibote, v.e, v.s de la fila actual
+        text = f"Pibote = {self.pibote}    V.E = {ve}    V.S = {vs}"
+        self.ui.lblPibote.setText(text)
+        self.ui.lblPibote.setAlignment(Qt.AlignCenter)
         
     # Método: Genera la siguiente tabla
     def nextTable(self):
@@ -391,10 +401,33 @@ class Simplex(QDialog):
         for i in range(variable):
             item = self.ui.tableResult.item(filas-1,i+2)
             cjZj.append(float(item.text()))
+            
+        self.ui.btnPreviousTabla.setEnabled(True)
+            
+        # Valida la última tabla
+        self.lastTable = self.validaLastTable(cjZj, bi)
+        print(self.lastTable)
+        if(self.lastTable == False):
+            msjErr = "Esta es la última tabla generada"
+            QMessageBox.about(self, "Error", msjErr)
+            self.ui.btnCalPibote.setEnabled(False)
+            self.ui.btnNextTabla.setEnabled(False)
+            return
+        
+        self.countClick += 1
+        # Obtiene todos los valores de la tabla para poder usar el botón anterior tabla
+        self.tablaAnterior = []
+        for f in range(self.fila):
+            filaAnterior = []
+            for c in range(self.columna):
+                item = self.ui.tableResult.item(f, c).text()
+                filaAnterior.append(item)
+                
+            self.tablaAnterior.append(filaAnterior)
+        self.allTable.append(self.tablaAnterior)
         
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
         variableEntrada = max(cjZj)
-        self.ui.lblVarEntrante.setText("")
         
         # Obtiene el indice de la variable de entrada
         self.indexColVariableEntrada = cjZj.index(variableEntrada) + 2
@@ -417,7 +450,6 @@ class Simplex(QDialog):
 
         # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
         variableSalida = min(valorVarSali)
-        self.ui.lblVarSaliente.setText("")
         
         # Obtiene el indice de la variable de salida
         self.indexFilVariableSalida = valorVarSali.index(variableSalida) + 2
@@ -449,33 +481,35 @@ class Simplex(QDialog):
         # Bucle: Genera las nuevas filas
         control = False
         for nwFila in range(len(colVarEntr)):
-            valBi = float(self.ui.tableResult.item(nwFila+2,columnas-1).text()) 
-            valBiCompare = float(self.ui.tableResult.item(self.indexFilVariableSalida,columnas-1).text())
+            try:
+                valBi = float(self.ui.tableResult.item(nwFila+2,columnas-1).text()) 
+                valBiCompare = float(self.ui.tableResult.item(self.indexFilVariableSalida,columnas-1).text())
 
-            div = valBi / colVarEntr[nwFila]
-            divCompare = valBiCompare / self.pibote
-            
-            if(float(colVarEntr[nwFila]) == self.pibote and div <= divCompare and control == False):
-                control = True
-                for p in range(variable+restriccion+1):
-                    item = float(filaPibote[p])
-                    pibote = round(item,4)
-                    cellItem = QTableWidgetItem(str(pibote))
-                    self.ui.tableResult.setItem(self.indexFilVariableSalida,p+2,cellItem)
-                    
-            else:
-                for p in range(variable+restriccion+1):
-                    # Obtiene los valores de la fila anterior
-                    antiguaFila = float(self.ui.tableResult.item(nwFila+2,p+2).text())
-                    # Obtiene la multiplicación de las demás filas con el pibote
-                    nuevaFila = float((filaPibote[p] * (colVarEntr[nwFila] * -1)))
-                    # Realiza la suma para formar la nueva 
-                    suma = nuevaFila + antiguaFila 
-                    suma = round(suma, 4)
-                    # Inserta los nuevos valores
-                    cellItem = QTableWidgetItem(str(suma))
-                    self.ui.tableResult.setItem(nwFila+2,p+2,cellItem)
-    
+                div = valBi / colVarEntr[nwFila]
+                divCompare = valBiCompare / self.pibote
+                
+                if(float(colVarEntr[nwFila]) == self.pibote and div <= divCompare and control == False):
+                    control = True
+                    for p in range(variable+restriccion+1):
+                        item = float(filaPibote[p])
+                        pibote = round(item,4)
+                        cellItem = QTableWidgetItem(str(pibote))
+                        self.ui.tableResult.setItem(self.indexFilVariableSalida,p+2,cellItem)
+                        
+                else:
+                    for p in range(variable+restriccion+1):
+                        # Obtiene los valores de la fila anterior
+                        antiguaFila = float(self.ui.tableResult.item(nwFila+2,p+2).text())
+                        # Obtiene la multiplicación de las demás filas con el pibote
+                        nuevaFila = float((filaPibote[p] * (colVarEntr[nwFila] * -1)))
+                        # Realiza la suma para formar la nueva 
+                        suma = nuevaFila + antiguaFila 
+                        suma = round(suma, 4)
+                        # Inserta los nuevos valores
+                        cellItem = QTableWidgetItem(str(suma))
+                        self.ui.tableResult.setItem(nwFila+2,p+2,cellItem)
+            except Exception as err:
+                print(f"Error: {err}")
         # Bucle: Genera los nuevo valores de Zj
         for uF in range(variable+restriccion+1):
             total = 0
@@ -500,9 +534,22 @@ class Simplex(QDialog):
             cellItem = QTableWidgetItem(str(cjZj))
             self.ui.tableResult.setItem(filas-1,colCj+2,cellItem)            
         
-        # Habilita botón calcular pibote
+    # Método: Obtiene la tabla anterior
+    def previousTable(self):
+        self.ui.lblPibote.setText("")
         self.ui.btnCalPibote.setEnabled(True)
-        self.ui.btnNextTabla.setEnabled(False)
+        self.ui.btnNextTabla.setEnabled(True)
+
+        if(len(self.allTable) != 0):  
+            for f in range(self.fila):
+                for c in range(self.columna):
+                    item = self.allTable[len(self.allTable)-1][f][c]
+                    cellItem = QTableWidgetItem(item)
+                    self.ui.tableResult.setItem(f,c,cellItem)    
+            self.allTable.pop()
+        else:
+            self.ui.btnPreviousTabla.setEnabled(False)
+        
     # Método: Elimina los datos de la tabla
     def deleteData(self):
         # Resetea las tablas y labels
@@ -511,8 +558,10 @@ class Simplex(QDialog):
         self.ui.lblMaxZ.setText("")
         self.ui.lblRestricc.setText("")
         self.ui.lblPibote.setText("")
-        self.ui.lblVarEntrante.setText("")
-        self.ui.lblVarSaliente.setText("")
+        self.ui.lblMaxZ.setStyleSheet("border: none")
+        self.ui.lblRestricc.setStyleSheet("border: none")
+        self.ui.tableResult.setStyleSheet("border: none")
+        self.ui.groupBoxRespuesta.setHidden(True)
         
         # Habilita el botón generar
         self.ui.btnGenerar.setEnabled(True)
