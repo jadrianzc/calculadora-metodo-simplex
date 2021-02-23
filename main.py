@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from vista.ui_metodoSimplex import Ui_Form
 import numpy as np
@@ -103,9 +104,14 @@ class Simplex(QDialog):
             self.ui.lblMaxZ.setStyleSheet("border: none; font-size: 18px")
             
         except Exception as err:
-            print(f"Error: {err}")
             msjErr = "Por favor, ingrese la función objetivo"
-            QMessageBox.about(self, "Error", msjErr)
+            msgBox1 = QMessageBox()
+            # msgBox1.setIcon(QMessageBox.Warning)
+            msgBox1.setText(msjErr)
+            msgBox1.setWindowTitle("Error")
+            msgBox1.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+            msgBox1.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+            msgBox1.exec_()
             self.validaFuncObj = False
     
     # Método: Genera las restricciones con las variables de holgura
@@ -182,9 +188,13 @@ class Simplex(QDialog):
             self.ui.lblRestricc.setStyleSheet("border: none; font-size: 18px")
                     
         except Exception as err:
-            print(f"Error: {err}")
             msjErr = "Por favor, ingrese las restricciones"
-            QMessageBox.about(self, "Error", msjErr)
+            msgBox2 = QMessageBox()
+            msgBox2.setText(msjErr)
+            msgBox2.setWindowTitle("Error")
+            msgBox2.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+            msgBox2.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+            msgBox2.exec_()
             self.validaRestr = False
 
     # Método: Valida los campos de función objetivo y de restricciones
@@ -201,6 +211,7 @@ class Simplex(QDialog):
             self.ui.btnGenerar.setEnabled(False)
             self.ui.btnNextTabla.setEnabled(True)
             self.ui.btnCalPibote.setEnabled(True)
+            self.ui.btnCalPibote.setFocus()
             
             # Deshabilita las tablas
             self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -309,7 +320,7 @@ class Simplex(QDialog):
                     self.ui.tableResult.setStyleSheet("border: none; font-size: 16px")
                            
         except Exception as err:
-            print(f"Error f: {err}")  
+            print(f"Error Generar Tabla: {err}")  
     
     # Método: Obtener datos de la tabla actual
     def dataCurrentTable(self):
@@ -334,10 +345,14 @@ class Simplex(QDialog):
 
         # Valida la última tabla
         self.lastTable = self.validaLastTable(self.cjZj, self.bi)
-        print(self.lastTable)
         if(self.lastTable == False):
-            msjErr = "Esta es la última tabla generada"
-            QMessageBox.about(self, "Error", msjErr)
+            msjErr = "Última tabla generada"
+            msgBox3 = QMessageBox()
+            msgBox3.setText(msjErr)
+            msgBox3.setWindowTitle("Éxito")
+            msgBox3.setWindowIcon(QIcon("vista/img/check.ico"))
+            msgBox3.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+            msgBox3.exec_()
             self.ui.btnCalPibote.setEnabled(False)
             self.ui.btnNextTabla.setEnabled(False)
             return
@@ -379,6 +394,7 @@ class Simplex(QDialog):
         text = f"Pibote = {self.pibote}    V.E = {ve}    V.S = {vs}"
         self.ui.lblPibote.setText(text)
         self.ui.lblPibote.setAlignment(Qt.AlignCenter)
+        self.ui.btnNextTabla.setFocus()
         
     # Método: Genera la siguiente tabla
     def nextTable(self):
@@ -403,13 +419,18 @@ class Simplex(QDialog):
             cjZj.append(float(item.text()))
             
         self.ui.btnPreviousTabla.setEnabled(True)
+        self.ui.btnCalPibote.setFocus()
             
         # Valida la última tabla
         self.lastTable = self.validaLastTable(cjZj, bi)
-        print(self.lastTable)
         if(self.lastTable == False):
             msjErr = "Esta es la última tabla generada"
-            QMessageBox.about(self, "Error", msjErr)
+            msgBox4 = QMessageBox()
+            msgBox4.setText(msjErr)
+            msgBox4.setWindowTitle("Error")
+            msgBox4.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+            msgBox4.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+            msgBox4.exec_()
             self.ui.btnCalPibote.setEnabled(False)
             self.ui.btnNextTabla.setEnabled(False)
             return
@@ -509,7 +530,8 @@ class Simplex(QDialog):
                         cellItem = QTableWidgetItem(str(suma))
                         self.ui.tableResult.setItem(nwFila+2,p+2,cellItem)
             except Exception as err:
-                print(f"Error: {err}")
+                print(f"Error Generar Nuevas Filas: {err}")
+                
         # Bucle: Genera los nuevo valores de Zj
         for uF in range(variable+restriccion+1):
             total = 0
@@ -550,6 +572,7 @@ class Simplex(QDialog):
         else:
             self.ui.btnPreviousTabla.setEnabled(False)
         
+        self.ui.btnCalPibote.setFocus()
     # Método: Elimina los datos de la tabla
     def deleteData(self):
         # Resetea las tablas y labels
@@ -567,6 +590,7 @@ class Simplex(QDialog):
         self.ui.btnGenerar.setEnabled(True)
         self.ui.btnCalcular.setEnabled(False)
         self.ui.btnNextTabla.setEnabled(False)
+        self.ui.btnPreviousTabla.setEnabled(False)
         
         # Habilita las tablas 
         self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.AllEditTriggers)
@@ -590,5 +614,6 @@ if __name__ == '__main__':
     app = QApplication([])
     app.setStyle(QStyleFactory.create('Fusion'))
     mi_App = Simplex()
+    mi_App.setWindowIcon(QIcon("vista/img/conta.ico"))
     mi_App.show()
     sys.exit(app.exec_())
