@@ -678,7 +678,7 @@ class Simplex(QDialog):
                 titulo = "REPORTE MÉTODO SIMPEX"
                 
                 if(autor != ""):
-                    autor = f'Autor:  {autor.upper()}'
+                    autor = f'AUTOR:  {autor.upper()}'
                 else:
                     autor = ""
                     
