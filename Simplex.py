@@ -413,7 +413,7 @@ class Simplex(QDialog):
         self.ui.tableResult.setItem(indexFilVariableSalida,indexColVariableEntrada,pibo)
 
         # Muestra los datos del pibote, v.e, v.s de la fila actual
-        text = f"Pibote = {self.pibote}    V.E = {ve}    V.S = {vs}"
+        text = f"Pivote = {self.pibote}    V.E = {ve}    V.S = {vs}"
         self.ui.lblPibote.setText(text)
         self.ui.lblPibote.setAlignment(Qt.AlignCenter)
         self.ui.btnNextTabla.setFocus()
@@ -505,7 +505,7 @@ class Simplex(QDialog):
         self.pibote = float(self.ui.tableResult.item(self.indexFilVariableSalida, self.indexColVariableEntrada).text())
         self.ui.lblPibote.setText("")
         
-        text = f"Pibote = {self.pibote}  ||  V.E = {self.ve}  ||  V.S = {self.vs}"
+        text = f"Pivote = {self.pibote}  ||  V.E = {self.ve}  ||  V.S = {self.vs}"
         self.allPibote.append(text)
         
         # Bucle: Obtiene las variables para reemplazar en la tabla Cb y Xb

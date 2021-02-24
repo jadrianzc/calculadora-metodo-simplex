@@ -272,7 +272,7 @@ class Ui_Form(object):
         self.groupBoxFuncObj.setTitle(_translate("Form", "Función Objetivo"))
         self.groupBoxAcciones.setTitle(_translate("Form", "Acciones"))
         self.btnCalcular.setText(_translate("Form", "CALCULAR"))
-        self.btnCalPibote.setText(_translate("Form", "CALCULAR PIBOTE"))
+        self.btnCalPibote.setText(_translate("Form", "CALCULAR PIVOTE"))
         self.btnPreviousTabla.setText(_translate("Form", "ANTERIOR TABLA"))
         self.btnNextTabla.setText(_translate("Form", "SIGUIENTE TABLA"))
         self.btnNuevo.setText(_translate("Form", "NUEVO"))
