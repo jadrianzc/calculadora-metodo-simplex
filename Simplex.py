@@ -22,7 +22,18 @@ class Simplex(QDialog):
         super(Simplex, self).__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+
+        # Resolver Ruta
+        def resolver_ruta(ruta_relativa):
+            if hasattr(sys, "_MEIPASS"):
+                return os.path.join(sys._MEIPASS, ruta_relativa)
+            return os.path.join(os.path.abspath("."), ruta_relativa)
         
+        self.icoMain = resolver_ruta("conta.ico")
+        self.icoError = resolver_ruta("cancelar.ico")
+        self.icoSucess = resolver_ruta("check.ico")
+        self.setWindowIcon(QIcon(self.icoMain))
+
         # Eventos
         self.ui.btnGenerar.clicked.connect(self.generateArrays)
         self.ui.btnCalcular.clicked.connect(self.dataFuncObj)
@@ -113,10 +124,9 @@ class Simplex(QDialog):
         except Exception as err:
             msjErr = "Por favor, ingrese la función objetivo"
             msgBox1 = QMessageBox()
-            # msgBox1.setIcon(QMessageBox.Warning)
             msgBox1.setText(msjErr)
             msgBox1.setWindowTitle("Error")
-            msgBox1.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+            msgBox1.setWindowIcon(QIcon(self.icoError))
             msgBox1.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox1.exec_()
             self.validaFuncObj = False
@@ -201,7 +211,7 @@ class Simplex(QDialog):
             msgBox2 = QMessageBox()
             msgBox2.setText(msjErr)
             msgBox2.setWindowTitle("Error")
-            msgBox2.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+            msgBox2.setWindowIcon(QIcon(self.icoError))
             msgBox2.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox2.exec_()
             self.validaRestr = False
@@ -366,7 +376,7 @@ class Simplex(QDialog):
             msgBox3 = QMessageBox()
             msgBox3.setText(msjErr)
             msgBox3.setWindowTitle("Éxito")
-            msgBox3.setWindowIcon(QIcon("vista/img/check.ico"))
+            msgBox3.setWindowIcon(QIcon(self.icoSucess))
             msgBox3.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox3.exec_()
             self.ui.btnCalPibote.setEnabled(False)
@@ -450,7 +460,7 @@ class Simplex(QDialog):
             msgBox4 = QMessageBox()
             msgBox4.setText(msjErr)
             msgBox4.setWindowTitle("Éxito")
-            msgBox4.setWindowIcon(QIcon("vista/img/check.ico"))
+            msgBox4.setWindowIcon(QIcon(self.icoSucess))
             msgBox4.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox4.exec_()
             self.ui.btnCalPibote.setEnabled(False)
@@ -724,7 +734,7 @@ class Simplex(QDialog):
                 msgBox5 = QMessageBox()
                 msgBox5.setText(msjErr)
                 msgBox5.setWindowTitle("Éxito")
-                msgBox5.setWindowIcon(QIcon("vista/img/check.ico"))
+                msgBox5.setWindowIcon(QIcon(self.icoSucess))
                 msgBox5.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
                 msgBox5.exec_()
                 
@@ -734,7 +744,7 @@ class Simplex(QDialog):
                 msgBox6 = QMessageBox()
                 msgBox6.setText(msjErr)
                 msgBox6.setWindowTitle("Error")
-                msgBox6.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+                msgBox6.setWindowIcon(QIcon(self.icoError))
                 msgBox6.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
                 msgBox6.exec_()
                 
@@ -746,6 +756,5 @@ if __name__ == '__main__':
     app = QApplication([])
     app.setStyle(QStyleFactory.create('Fusion'))
     mi_App = Simplex()
-    mi_App.setWindowIcon(QIcon("vista/img/conta.ico"))
     mi_App.show()
     sys.exit(app.exec_())
