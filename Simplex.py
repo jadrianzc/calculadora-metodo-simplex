@@ -742,7 +742,7 @@ class Simplex(QDialog):
         self.allPibote.pop()
 
 # Inicia la aplicación
-if __name__ == '__main__':
+if __name__ == '__main__':    
     app = QApplication([])
     app.setStyle(QStyleFactory.create('Fusion'))
     mi_App = Simplex()
