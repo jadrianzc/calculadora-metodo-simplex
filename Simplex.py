@@ -729,6 +729,7 @@ class Simplex(QDialog):
                 msgBox5.exec_()
                 
                 os.system("Reporte_Simplex.pdf")
+                os.system("exit")
             except PermissionError:
                 msjErr = "Ocurrió un error al generar el reporte"
                 msgBox6 = QMessageBox()
