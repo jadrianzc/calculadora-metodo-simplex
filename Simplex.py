@@ -4,7 +4,13 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from vista.ui_metodoSimplex import Ui_Form
 import numpy as np
-import sys, re, math
+import sys, re, math, os
+from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
+from reportlab.platypus import (SimpleDocTemplate, PageBreak, Image, Spacer,Paragraph, Table, TableStyle)
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import inch
 
 class Simplex(QDialog):
     cantVariables = 0
@@ -27,6 +33,7 @@ class Simplex(QDialog):
         self.ui.btnNextTabla.clicked.connect(self.nextTable)
         self.ui.btnPreviousTabla.clicked.connect(self.previousTable)
         self.ui.btnSalir.clicked.connect(self.exitApp)
+        self.ui.btnImprimir.clicked.connect(self.generarReporte)
         
     # Método: Genera las matrices para ingresar la cantidad de variables y restricciones
     def generateArrays(self):
@@ -83,12 +90,12 @@ class Simplex(QDialog):
         
         matrizFuncObj = []
         self.matrizFuncObjNum = []
-        funcObj = "Max Z = "
+        self.funcObj = "Max Z = "
         
         try:
             for i in range(self.cantVariables):
                 item = self.ui.tableFuncObj.item(0, i)
-                itemNum = int(item.text())
+                itemNum = float(item.text())
                 self.matrizFuncObjNum.append(itemNum)
                 matrizFuncObj.append(f"{item.text()}x{i+1}")
                      
@@ -96,10 +103,10 @@ class Simplex(QDialog):
                 self.matrizFuncObjNum.append(0)
                 matrizFuncObj.append(f"{0}s{j+1}")
                 
-            funcObj += " + ".join(matrizFuncObj)
+            self.funcObj += " + ".join(matrizFuncObj)
             
             # Crea un label con la función objetivo
-            self.ui.lblMaxZ.setText(funcObj)
+            self.ui.lblMaxZ.setText(self.funcObj)
             self.ui.lblMaxZ.setAlignment(Qt.AlignCenter)
             self.ui.lblMaxZ.setStyleSheet("border: none; font-size: 18px")
             
@@ -123,8 +130,9 @@ class Simplex(QDialog):
         self.validaRestr = True
         
         matrizRestr = []
+        self.arrayRestr = []
         self.matrizRestrNum = []
-        sujRestr = "S.R. :\n"
+        self.sujRestr = "S.R. :\n"
         
         try:
             # Bucle: incrementa las filas
@@ -139,7 +147,7 @@ class Simplex(QDialog):
                 for j in range(column):
                     increment += 1
                     item = self.ui.tableRestr.item(i,j)
-                    itemNum = int(item.text())
+                    itemNum = float(item.text())
                     matrizRestrVar.append(itemNum)
                     divRestr.append(f"{item.text()}x{increment}")
                     
@@ -158,13 +166,13 @@ class Simplex(QDialog):
                 # Bucle: controla los valores independientes
                 for k in range(column+1, column+2):
                     item = self.ui.tableRestr.item(i,k)
-                    itemNum = int(item.text())
+                    itemNum = float(item.text())
                     restrBi = itemNum
                     restr.append(f"{item.text()}")
                     
                 # Bucle: convierte cada item de la matriz de holgura a entero y se hace un append por ir formando la ecuación
                 for h in range(fila):
-                    intHolg = int(matrizHolg[i][h])
+                    intHolg = float(matrizHolg[i][h])
                     matrizRestrVar.append(intHolg)
                     
                 # Se hace un append del valor Bi para formar la ecuación
@@ -180,10 +188,11 @@ class Simplex(QDialog):
             for matriz in range(len(matrizRestr)):
                 string = " + ".join(matrizRestr[matriz][0])
                 sr = f"{string} {matrizRestr[matriz][1]} {matrizRestr[matriz][2]}"
-                sujRestr += f"   {sr}\n"
+                self.arrayRestr.append(sr)
+                self.sujRestr += f"   {sr}\n"
             
             # Crea un label con la función objetivo
-            self.ui.lblRestricc.setText(sujRestr)
+            self.ui.lblRestricc.setText(self.sujRestr)
             self.ui.lblRestricc.setAlignment(Qt.AlignVCenter)
             self.ui.lblRestricc.setStyleSheet("border: none; font-size: 18px")
                     
@@ -202,7 +211,7 @@ class Simplex(QDialog):
         if(self.validaFuncObj == True and self.validaRestr == True):
             self.countClick = 1
             self.allTable = []
-            self.fullTable = []
+            self.allPibote = []
             
             # Ejecutar la función para generar las tablas
             self.generarTabla(self.cantVariables, self.cantRestricciones)
@@ -228,7 +237,7 @@ class Simplex(QDialog):
             if(valor <= 0):
                 count += 1
         
-        result = ""
+        self.result = ""
         if(count == len(cjZj)):
             bi.append(z)
             for indBi in range(len(bi)):
@@ -240,14 +249,15 @@ class Simplex(QDialog):
                 item = self.ui.tableResult.item(indBi+2, 1).text()  
                 
                 if(indBi == len(bi)-1):
-                    result += f"{item} = {newBi}"
+                    self.result += f"{item} = {newBi}"
                 else:
-                    result += f"{item} = {newBi} || "
+                    self.result += f"{item} = {newBi}  ||  "
             
+            self.totalTable = len(self.allTable)+ 1
             self.ui.groupBoxRespuesta.setHidden(False)
-            self.ui.lblRespuesta.setText(result)
+            self.ui.lblRespuesta.setText(self.result)
             self.ui.lblRespuesta.setAlignment(Qt.AlignCenter)
-            self.ui.lblTotalTable.setText(f"Total Tablas = {len(self.allTable)+ 1}")
+            self.ui.lblTotalTable.setText(f"Total Tablas = {self.totalTable}")
             self.ui.lblTotalTable.setAlignment(Qt.AlignRight)
             return False
         else:
@@ -361,6 +371,8 @@ class Simplex(QDialog):
             msgBox3.exec_()
             self.ui.btnCalPibote.setEnabled(False)
             self.ui.btnNextTabla.setEnabled(False)
+            self.ui.btnImprimir.setEnabled(True)
+            self.ui.btnImprimir.setFocus()
             return
         
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
@@ -443,6 +455,8 @@ class Simplex(QDialog):
             msgBox4.exec_()
             self.ui.btnCalPibote.setEnabled(False)
             self.ui.btnNextTabla.setEnabled(False)
+            self.ui.btnImprimir.setEnabled(True)
+            self.ui.btnImprimir.setFocus()
             return
         
         self.countClick += 1
@@ -459,6 +473,7 @@ class Simplex(QDialog):
         
         # Encuentra el valor máximo de Cj-Zj, o llamado variable de entrada
         variableEntrada = max(cjZj)
+        self.ve = self.ui.tableResult.item(1,cjZj.index(variableEntrada)+2).text() 
         
         # Obtiene el indice de la variable de entrada
         self.indexColVariableEntrada = cjZj.index(variableEntrada) + 2
@@ -481,6 +496,7 @@ class Simplex(QDialog):
 
         # Encuentra el valor mínimo entre Bi / valores de v.e, o llamado variable de salida
         variableSalida = min(valorVarSali)
+        self.vs = self.ui.tableResult.item(valorVarSali.index(variableSalida)+2,1).text()
         
         # Obtiene el indice de la variable de salida
         self.indexFilVariableSalida = valorVarSali.index(variableSalida) + 2
@@ -488,6 +504,9 @@ class Simplex(QDialog):
         # Ubicamos el pibote
         self.pibote = float(self.ui.tableResult.item(self.indexFilVariableSalida, self.indexColVariableEntrada).text())
         self.ui.lblPibote.setText("")
+        
+        text = f"Pibote = {self.pibote}  ||  V.E = {self.ve}  ||  V.S = {self.vs}"
+        self.allPibote.append(text)
         
         # Bucle: Obtiene las variables para reemplazar en la tabla Cb y Xb
         for rem in range(2):
@@ -585,10 +604,13 @@ class Simplex(QDialog):
                     cellItem.setBackground(QtGui.QColor(239, 239, 239))
                     self.ui.tableResult.setItem(f,c,cellItem)    
             self.allTable.pop()
+            self.allPibote.pop()
         else:
             self.ui.btnPreviousTabla.setEnabled(False)
         
         self.ui.btnCalPibote.setFocus()
+        self.ui.btnImprimir.setEnabled(False)
+        
     # Método: Elimina los datos de la tabla
     def deleteData(self):
         # Resetea las tablas y labels
@@ -608,6 +630,7 @@ class Simplex(QDialog):
         self.ui.btnNextTabla.setEnabled(False)
         self.ui.btnPreviousTabla.setEnabled(False)
         self.ui.btnCalPibote.setEnabled(False)
+        self.ui.btnImprimir.setEnabled(False)
         
         # Habilita las tablas 
         self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.AllEditTriggers)
@@ -626,111 +649,97 @@ class Simplex(QDialog):
         app = QApplication([])
         sys.exit(app.exec_())
 
-    # def generarReporte(self):
-    #     text, ok = QInputDialog.getText(self, 'Generar Reporte','Ingrese el nombre de quien genera el reporte:')
-
-    #     if ok:
-    #         numRestriccion = int(self.ui.numRestricciones.value())
-            
-    #     try:
-    #         Fila1 = []
-    #         Fila2 = []      162
-    #         Fila3 = []
-    #         Fila4 = []
-    #         Fila5 = []
-    #         Fila6 = []
-
-    #         for i in range(7):
-    #             #Extrae los valores de la fila 0
-    #             itemFila0 = self.ui.matriz.item(0,i).text()
-    #             Fila1.append(itemFila0)
-    #             #Extrae los valores de la fila 1
-    #             itemFila1 = self.ui.matriz.item(1,i).text()
-    #             Fila2.append(itemFila1)
-    #             if i >= 2:
-    #                 #Extrae los valores de la fila 2
-    #                 itemFila2 = float(self.ui.matriz.item(2,i).text())
-    #                 Fila3.append("{:.3f}".format(itemFila2))
-    #                 #Extrae los valores de la fila 3
-    #                 itemFila3 = float(self.ui.matriz.item(3,i).text())
-    #                 Fila4.append("{:.3f}".format(itemFila3))
-    #                 #Extrae los valores de la fila 4
-    #                 itemFila4 = float(self.ui.matriz.item(4,i).text())
-    #                 Fila5.append("{:.3f}".format(itemFila4))
-    #                 if i == 6:
-    #                     #Extrae los valores de la fila 5
-    #                     itemFila5 = self.ui.matriz.item(5,i).text()
-    #                     Fila6.append(itemFila5)
-    #                 else:
-    #                     #Extrae los valores de la fila 5
-    #                     itemFila5 = float(self.ui.matriz.item(5,i).text())
-    #                     Fila6.append("{:.3f}".format(itemFila5))
-                    
-
-    #             else:
-    #                 #Extrae los valores de la fila 2
-    #                 itemFila2 = self.ui.matriz.item(2,i).text()
-    #                 Fila3.append(itemFila2)
-    #                 #Extrae los valores de la fila 3
-    #                 itemFila3 = self.ui.matriz.item(3,i).text()
-    #                 Fila4.append(itemFila3)
-    #                 #Extrae los valores de la fila 4
-    #                 itemFila4 = self.ui.matriz.item(4,i).text()
-    #                 Fila5.append(itemFila4)
-    #                 #Extrae los valores de la fila 5
-    #                 itemFila5 = self.ui.matriz.item(5,i).text()
-    #                 Fila6.append(itemFila5)
-
-    #         funcion = self.ui.label_funObj.text()
-    #         funcion_objetivo = f'Max {funcion}'
-    #         print(funcion_objetivo)   
-
-    #         resultado1 = self.ui.label_varEntra.text()
-    #         resultado2 = self.ui.label_varSale.text()
-    #         resultado3 = self.ui.valorZ.text()
-
-    #         doc = SimpleDocTemplate("Reporte_Simplex2.pdf", pagesize = A4, topMargin=12)
-    #         alineacionTitulo = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=20, leading=40)
-    #         alineacionAutor = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=11, leading=40)
-    #         alineacionResultados = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=30)
-    #         alineacionFuncion = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=40)
-
-    #         story=[]
-    #         t = Table([
-    #                 Fila1, 
-    #                 Fila2, 
-    #                 Fila3,
-    #                 Fila4,
-    #                 Fila5,
-    #                 Fila6
-    #             ], colWidths=45, rowHeights=30)
-
-    #         t.setStyle([
-    #                     ('GRID',(0,0),(-1,-1),0.5,colors.grey),
-    #                     ('BOX',(0,0),(-1,-1),2,colors.black),
-    #                     ('BACKGROUND', (0, 2), (-1, 0), colors.lightgreen),
-    #                     ('BACKGROUND', (1, 0), (1, 6), colors.lightgreen),
-    #                     ('BACKGROUND', (6, 4), (6, 4), colors.lightskyblue),
-    #             ])
-    #         titulo = "Reporte Método Simplex"
-    #         autor = f'Autor:  {text}'
-    #         story.append(Image('logo.png'))
-    #         story.append(Paragraph(titulo, alineacionTitulo))
-    #         story.append(Paragraph(autor, alineacionAutor))
-    #         story.append(Paragraph(funcion_objetivo, alineacionFuncion))
-    #         story.append(Paragraph(resultado1, alineacionResultados))
-    #         story.append(Paragraph(resultado2, alineacionResultados))
-    #         story.append(Paragraph(resultado3, alineacionResultados))
-    #         story.append(t)                
-    #         story.append(Spacer(0,15))
-    #         doc.build(story)
-    #         os.system("Reporte_Simplex2.pdf")
-
+    # Método: Genera el PDF
+    def generarReporte(self):
+        self.tablaFinal = []
+        for f in range(self.fila):
+            filaAnterior = []
+            for c in range(self.columna):
+                item = self.ui.tableResult.item(f, c).text()
+                filaAnterior.append(item)
+                
+            self.tablaFinal.append(filaAnterior)
+        self.allTable.append(self.tablaFinal)
         
-    #         print("Se genero el reporte")
-    #     except PermissionError:
-    #         print("No se genero el PDF")
-
+        self.allPibote.append("Última tabla.")
+        
+        autor, accept = QInputDialog.getText(self, 'Generar Reporte','Ingrese el nombre de quien genera el reporte:')
+        if(accept):
+            try:
+                doc = SimpleDocTemplate(f'Reporte_Simplex.pdf', pagesize = A4, topMargin=12)
+                alineacionTitulo = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=20, leading=40)
+                alineacionTituloTabla = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=14, leading=40)
+                alineacionAutor = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=11, leading=30)
+                alineacionOpTable = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=12, leading=40)
+                alineacionResultados = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=30)
+                alineacionRestr = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=12, leading=30)
+                
+                story=[]
+                titulo = "REPORTE MÉTODO SIMPEX"
+                
+                if(autor != ""):
+                    autor = f'Autor:  {autor.upper()}'
+                else:
+                    autor = ""
+                    
+                story.append(Paragraph(titulo, alineacionTitulo))
+                story.append(Paragraph(autor, alineacionAutor))
+                story.append(Paragraph(f"Función Objetivo: {self.funcObj}", alineacionResultados))
+                story.append(Paragraph(f"S.R:", alineacionResultados))
+                for restr in range(self.cantRestricciones):
+                    story.append(Paragraph(f"{self.arrayRestr[restr]}", alineacionRestr))
+                story.append(Paragraph(f"Resultado: {self.result}", alineacionResultados))
+                story.append(Paragraph(f"Total de tablas generadas: {self.totalTable}", alineacionResultados))
+                
+                
+                for table in range(len(self.allTable)):
+                    self.arrayFila = []
+                    for f in range(self.fila):
+                        item = self.allTable[table][f]
+                        self.arrayFila.append(item)
+                    
+                    tabla = Table(self.arrayFila, colWidths=50, rowHeights=40)
+                    tabla.setStyle([
+                            ('GRID',(0,0),(-1,-1),2,colors.black),
+                            ('BOX',(0,0),(-1,-1),2,colors.black),
+                            ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                            ('BACKGROUND', (0, 0), (-1, 1), colors.HexColor('#16145A')),
+                            ('TEXTCOLOR', (0, 0), (-1, 1), colors.HexColor('#ffffff'))
+                    ])
+                    
+                    story.append(Paragraph(f"TABLA {table+1}", alineacionTituloTabla))
+                    story.append(tabla)  
+                    story.append(Spacer(0, 2))  
+                    story.append(Paragraph(self.allPibote[table], alineacionOpTable))
+                    
+                    if(table+1 == len(self.allTable)):
+                        story.append(Spacer(0, 0))  
+                    else:
+                        story.append(Spacer(0, 250))  
+                        
+                doc.build(story)
+                
+                msjErr = "Reporte generado correctamente"
+                msgBox5 = QMessageBox()
+                msgBox5.setText(msjErr)
+                msgBox5.setWindowTitle("Éxito")
+                msgBox5.setWindowIcon(QIcon("vista/img/check.ico"))
+                msgBox5.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+                msgBox5.exec_()
+                
+                os.system("Reporte_Simplex.pdf")
+            except PermissionError:
+                msjErr = "Ocurrió un error al generar el reporte"
+                msgBox6 = QMessageBox()
+                msgBox6.setText(msjErr)
+                msgBox6.setWindowTitle("Error")
+                msgBox6.setWindowIcon(QIcon("vista/img/cancelar.ico"))
+                msgBox6.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+                msgBox6.exec_()
+                
+        self.allTable.pop()
+        self.allPibote.pop()
 
 # Inicia la aplicación
 if __name__ == '__main__':

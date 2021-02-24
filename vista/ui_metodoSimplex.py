@@ -135,20 +135,26 @@ class Ui_Form(object):
         self.groupBoxAcciones.setObjectName("groupBoxAcciones")
         # BTN CALCULAR
         self.btnCalcular = QtWidgets.QPushButton(self.groupBoxAcciones)
-        self.btnCalcular.setGeometry(QtCore.QRect(45, 35, 80, 30))
+        self.btnCalcular.setGeometry(QtCore.QRect(20, 35, 80, 30))
         self.btnCalcular.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnCalcular.setObjectName("btnCalcular")
         self.btnCalcular.setEnabled(False)
         # BTN NUEVO 
         self.btnNuevo = QtWidgets.QPushButton(self.groupBoxAcciones)
-        self.btnNuevo.setGeometry(QtCore.QRect(190, 35, 80, 30))
+        self.btnNuevo.setGeometry(QtCore.QRect(130, 35, 80, 30))
         self.btnNuevo.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnNuevo.setObjectName("btnNuevo")
         # BTN SALIR
         self.btnSalir = QtWidgets.QPushButton(self.groupBoxAcciones)
-        self.btnSalir.setGeometry(QtCore.QRect(330, 35, 80, 30))
+        self.btnSalir.setGeometry(QtCore.QRect(240, 35, 80, 30))
         self.btnSalir.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnSalir.setObjectName("btnSalir")
+        # BTN IMPRIMIR
+        self.btnImprimir = QtWidgets.QPushButton(self.groupBoxAcciones)
+        self.btnImprimir.setGeometry(QtCore.QRect(348, 35, 80, 30))
+        self.btnImprimir.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnImprimir.setObjectName("btnImprimir")
+        self.btnImprimir.setEnabled(False)
         # BTN CALCULAR PIBOTE
         self.btnCalPibote = QtWidgets.QPushButton(self.groupBoxAcciones)
         self.btnCalPibote.setGeometry(QtCore.QRect(20, 80, 130, 30))
@@ -271,6 +277,8 @@ class Ui_Form(object):
         self.btnNextTabla.setText(_translate("Form", "SIGUIENTE TABLA"))
         self.btnNuevo.setText(_translate("Form", "NUEVO"))
         self.btnSalir.setText(_translate("Form", "SALIR"))
+        self.btnSalir.setText(_translate("Form", "SALIR"))
+        self.btnImprimir.setText(_translate("Form", "IMPRIMIR"))
         self.groupBoxResul.setTitle(_translate("Form", "Resultado"))
         self.groupBoxRespuesta.setTitle(_translate("Form", "Respuesta"))
         
