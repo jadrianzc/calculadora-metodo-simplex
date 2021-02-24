@@ -256,7 +256,6 @@ class Ui_Form(object):
         self.lblTotalTable.setObjectName("lblTotalTable")
         self.lblTotalTable.setStyleSheet("border: none; font-size: 18px")
         
-        
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 

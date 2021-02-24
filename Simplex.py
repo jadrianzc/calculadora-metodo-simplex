@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from vista.ui_metodoSimplex import Ui_Form
 import numpy as np
-import sys, re, math, os
+import sys, re, os
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.platypus import (SimpleDocTemplate, PageBreak, Image, Spacer,Paragraph, Table, TableStyle)
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -728,8 +728,7 @@ class Simplex(QDialog):
                 msgBox5.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
                 msgBox5.exec_()
                 
-                os.system("Reporte_Simplex.pdf")
-                os.system("exit")
+                os.system("Reporte_Simplex.pdf && exit")
             except PermissionError:
                 msjErr = "Ocurrió un error al generar el reporte"
                 msgBox6 = QMessageBox()
