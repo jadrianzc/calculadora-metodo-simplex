@@ -22,4 +22,4 @@
 
 ### 🔨 Ejecutable del programa
 
-[Simplex.exe](https://edg-pharmacy.herokuapp.com/)
+[Simplex.exe](https://n9.cl/38fep)
