@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
-from vista.ui_mainWindow import Ui_MainWindow
+from src.views.ui_mainWindow import Ui_MainWindow
 import numpy as np
 import sys, re, os
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
@@ -28,9 +28,10 @@ class Simplex(QMainWindow):
                 return os.path.join(sys._MEIPASS, ruta_relativa)
             return os.path.join(os.path.abspath("."), ruta_relativa)
         
-        self.icoMain = resolver_ruta("conta.ico")
-        self.icoError = resolver_ruta("cancelar.ico")
-        self.icoSucess = resolver_ruta("check.ico")
+        # Definición de íconos
+        self.icoMain = resolver_ruta("src/assets/conta.ico")
+        self.icoError = resolver_ruta("src/assets/cancelar.ico")
+        self.icoSucess = resolver_ruta("src/assets/check.ico")
         self.setWindowIcon(QIcon(self.icoMain))
 
         # Eventos
@@ -656,8 +657,10 @@ class Simplex(QMainWindow):
         
     # Método: Cierra el programa
     def exitApp(self):
-        app = QApplication([])
-        sys.exit(app.exec_())
+        # app = QApplication([])
+        # sys.exit(app.exec_())
+        self.ui.widgetSimplex.setVisible(False)
+        self.ui.widgetPerl.setVisible(False)
 
     # Método: Genera el PDF
     def generarReporte(self):

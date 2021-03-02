@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        ############################################ UI - MAIN WINDOW ############################################
         # VENTANA PRINCIPAL
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1366, 730)
@@ -60,8 +61,7 @@ class Ui_MainWindow(object):
         self.menuM_todo.addSeparator()
         self.menuM_todo.addAction(self.actionPerl_CPM)
         self.menubar.addAction(self.menuM_todo.menuAction())
-        
-        
+        ########################################### UI - MÉTODO SIMPLEX ###########################################
         # GROUP BOX DATOS
         self.groupBoxDatos = QtWidgets.QGroupBox(self.widgetSimplex)
         self.groupBoxDatos.setGeometry(QtCore.QRect(30, 0, 450, 142))
@@ -305,18 +305,82 @@ class Ui_MainWindow(object):
         self.lblTotalTable.setFont(font)
         self.lblTotalTable.setObjectName("lblTotalTable")
         self.lblTotalTable.setStyleSheet("border: none; font-size: 18px")
+        ########################################### UI - MÉTODO PERL ###########################################
+        # GROUP BOX DATOS ACTIVIDADES
+        self.groupBoxDatosPerl = QtWidgets.QGroupBox(self.widgetPerl)
+        self.groupBoxDatosPerl.setGeometry(QtCore.QRect(30, 0, 1300, 80))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBoxDatosPerl.setFont(font)
+        self.groupBoxDatosPerl.setObjectName("groupBoxDatosPerl")
+        # LABEL ACTIVIDAD
+        self.lblAct = QtWidgets.QLabel(self.groupBoxDatosPerl)
+        self.lblAct.setGeometry(QtCore.QRect(40, 40, 300, 20))
+        self.lblAct.setBaseSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.lblAct.setFont(font)
+        self.lblAct.setAutoFillBackground(False)
+        self.lblAct.setStyleSheet("")
+        self.lblAct.setObjectName("lblAct")
+        self.lblAct.setStyleSheet("font-size: 16px")
+        # INPUT ACTIVIDAD
+        self.inputAct = QtWidgets.QSpinBox(self.groupBoxDatosPerl)
+        self.inputAct.setGeometry(QtCore.QRect(350, 40, 40, 20))
+        font = QtGui.QFont()
+        font.setBold(False)
+        font.setWeight(50)
+        self.inputAct.setFont(font)
+        self.inputAct.setFocusPolicy(QtCore.Qt.WheelFocus)
+        self.inputAct.setToolTipDuration(-27)
+        self.inputAct.setKeyboardTracking(True)
+        self.inputAct.setMinimum(2)
+        self.inputAct.setObjectName("inputAct")
+        # BTN GENERAR
+        self.btnGenerarPerl = QtWidgets.QPushButton(self.groupBoxDatosPerl)
+        self.btnGenerarPerl.setGeometry(QtCore.QRect(420, 35, 80, 30))
+        self.btnGenerarPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnGenerarPerl.setObjectName("btnGenerarPerl")
+        # GROUP BOX RESULTADO ACTIVIDADES
+        self.groupBoxrResPerl = QtWidgets.QGroupBox(self.widgetPerl)
+        self.groupBoxrResPerl.setGeometry(QtCore.QRect(30, 100, 1300, 580))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBoxrResPerl.setFont(font)
+        self.groupBoxrResPerl.setObjectName("groupBoxrResPerl")
+        # TABLA ACTIVIDADES
+        self.tableFuncObj = QtWidgets.QTableWidget(self.groupBoxrResPerl)
+        self.tableFuncObj.setGeometry(QtCore.QRect(5, 5, 1290, 575))
+        self.tableFuncObj.setObjectName("tableFuncObj")
+        self.tableFuncObj.setColumnCount(0)
+        self.tableFuncObj.setRowCount(0)
+        self.tableFuncObj.verticalHeader().setVisible(False)
+        self.tableFuncObj.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
+        self.tableFuncObj.horizontalHeader().setDefaultSectionSize(50)
+        self.tableFuncObj.horizontalHeader().setStyleSheet("color: #fff")
+        self.tableFuncObj.setStyleSheet("border: 1px solid #000; font-size: 16px")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
+        #################################### MAIN WINDOW ####################################
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label.setText(_translate("MainWindow", "BIENVENIDO"))
         self.menuM_todo.setTitle(_translate("MainWindow", "Método"))
         self.actionSimplex.setText(_translate("MainWindow", "Simplex"))
         self.actionPerl_CPM.setText(_translate("MainWindow", "Perl"))
-        
+        #################################### UI - SIMPLEX ####################################
         self.groupBoxDatos.setTitle(_translate("MainWindow", "Datos"))
         self.lblVar.setText(_translate("MainWindow", "Ingrese el número de variables:"))
         self.lblRes.setText(_translate("MainWindow", "Ingrese el número de restricciones:"))
@@ -335,7 +399,10 @@ class Ui_MainWindow(object):
         self.btnImprimir.setText(_translate("MainWindow", "IMPRIMIR"))
         self.groupBoxResul.setTitle(_translate("MainWindow", "Resultado"))
         self.groupBoxRespuesta.setTitle(_translate("MainWindow", "Respuesta"))
-
+        #################################### UI - PERL ####################################
+        self.groupBoxDatosPerl.setTitle(_translate("MainWindow", "Datos"))
+        self.lblAct.setText(_translate("MainWindow", "Ingrese el número de actividades:"))
+        self.btnGenerarPerl.setText(_translate("MainWindow", "GENERAR"))
 
 if __name__ == "__main__":
     import sys
