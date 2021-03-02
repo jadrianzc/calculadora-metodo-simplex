@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
-from vista.ui_metodoSimplex import Ui_Form
+from vista.ui_mainWindow import Ui_MainWindow
 import numpy as np
 import sys, re, os
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
@@ -12,16 +12,15 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 
-class Simplex(QDialog):
+class Simplex(QMainWindow):
     cantVariables = 0
     cantRestricciones = 0
     
     # Constructor
-    def __init__(self):
-        
+    def __init__(self, ui):
         super(Simplex, self).__init__()
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
+        self.ui = ui
+        # self.ui.setupUi(self)
 
         # Resolver Ruta
         def resolver_ruta(ruta_relativa):
@@ -45,6 +44,7 @@ class Simplex(QDialog):
         self.ui.btnPreviousTabla.clicked.connect(self.previousTable)
         self.ui.btnSalir.clicked.connect(self.exitApp)
         self.ui.btnImprimir.clicked.connect(self.generarReporte)
+        
         
     # Método: Genera las matrices para ingresar la cantidad de variables y restricciones
     def generateArrays(self):
@@ -752,9 +752,9 @@ class Simplex(QDialog):
         self.allPibote.pop()
 
 # Inicia la aplicación
-if __name__ == '__main__':    
-    app = QApplication([])
-    app.setStyle(QStyleFactory.create('Fusion'))
-    mi_App = Simplex()
-    mi_App.show()
-    sys.exit(app.exec_())
+# if __name__ == '__main__':    
+#     app = QApplication([])
+#     app.setStyle(QStyleFactory.create('Fusion'))
+#     mi_App = Simplex()
+#     mi_App.show()
+#     sys.exit(app.exec_())
