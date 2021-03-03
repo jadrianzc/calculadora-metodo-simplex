@@ -37,6 +37,7 @@ class MainWindow(QMainWindow):
     def showPerlUI(self):
         self.ui.widgetSimplex.setVisible(False)
         self.ui.widgetPerl.setVisible(True)
+        self.perl = Perl(self.ui)
     
 # Inicia la aplicación
 if __name__ == '__main__':    

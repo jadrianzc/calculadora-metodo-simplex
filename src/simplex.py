@@ -46,7 +46,6 @@ class Simplex(QMainWindow):
         self.ui.btnSalir.clicked.connect(self.exitApp)
         self.ui.btnImprimir.clicked.connect(self.generarReporte)
         
-        
     # Método: Genera las matrices para ingresar la cantidad de variables y restricciones
     def generateArrays(self):
         self.cantVariables = self.ui.inputVar.value()
@@ -753,11 +752,3 @@ class Simplex(QMainWindow):
                 
         self.allTable.pop()
         self.allPibote.pop()
-
-# Inicia la aplicación
-# if __name__ == '__main__':    
-#     app = QApplication([])
-#     app.setStyle(QStyleFactory.create('Fusion'))
-#     mi_App = Simplex()
-#     mi_App.show()
-#     sys.exit(app.exec_())

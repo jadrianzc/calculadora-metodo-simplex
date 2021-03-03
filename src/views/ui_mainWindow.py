@@ -358,16 +358,17 @@ class Ui_MainWindow(object):
         self.groupBoxrResPerl.setFont(font)
         self.groupBoxrResPerl.setObjectName("groupBoxrResPerl")
         # TABLA ACTIVIDADES
-        self.tableFuncObj = QtWidgets.QTableWidget(self.groupBoxrResPerl)
-        self.tableFuncObj.setGeometry(QtCore.QRect(5, 5, 1290, 575))
-        self.tableFuncObj.setObjectName("tableFuncObj")
-        self.tableFuncObj.setColumnCount(0)
-        self.tableFuncObj.setRowCount(0)
-        self.tableFuncObj.verticalHeader().setVisible(False)
-        self.tableFuncObj.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
-        self.tableFuncObj.horizontalHeader().setDefaultSectionSize(50)
-        self.tableFuncObj.horizontalHeader().setStyleSheet("color: #fff")
-        self.tableFuncObj.setStyleSheet("border: 1px solid #000; font-size: 16px")
+        self.tableActividades = QtWidgets.QTableWidget(self.groupBoxrResPerl)
+        self.tableActividades.setGeometry(QtCore.QRect(5, 5, 1290, 575))
+        self.tableActividades.setObjectName("tableActividades")
+        self.tableActividades.setColumnCount(0)
+        self.tableActividades.setRowCount(0)
+        self.tableActividades.verticalHeader().setVisible(False)
+        self.tableActividades.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
+        self.tableActividades.horizontalHeader().setDefaultSectionSize(75)
+        self.tableActividades.horizontalHeader().setStyleSheet("color: #fff")
+        self.tableActividades.setStyleSheet("border: 1px solid #000; font-size: 16px")
+        
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -403,6 +404,7 @@ class Ui_MainWindow(object):
         self.groupBoxDatosPerl.setTitle(_translate("MainWindow", "Datos"))
         self.lblAct.setText(_translate("MainWindow", "Ingrese el número de actividades:"))
         self.btnGenerarPerl.setText(_translate("MainWindow", "GENERAR"))
+        
 
 if __name__ == "__main__":
     import sys
