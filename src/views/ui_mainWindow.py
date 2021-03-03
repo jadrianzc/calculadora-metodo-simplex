@@ -347,6 +347,11 @@ class Ui_MainWindow(object):
         self.btnGenerarPerl.setGeometry(QtCore.QRect(420, 35, 80, 30))
         self.btnGenerarPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnGenerarPerl.setObjectName("btnGenerarPerl")
+        # BTN CALCULAR PERL
+        self.btnCalcularPerl = QtWidgets.QPushButton(self.groupBoxDatosPerl)
+        self.btnCalcularPerl.setGeometry(QtCore.QRect(1000, 35, 80, 30))
+        self.btnCalcularPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnCalcularPerl.setObjectName("btnCalcularPerl")
         # GROUP BOX RESULTADO ACTIVIDADES
         self.groupBoxrResPerl = QtWidgets.QGroupBox(self.widgetPerl)
         self.groupBoxrResPerl.setGeometry(QtCore.QRect(30, 100, 1300, 580))
@@ -368,6 +373,7 @@ class Ui_MainWindow(object):
         self.tableActividades.horizontalHeader().setDefaultSectionSize(75)
         self.tableActividades.horizontalHeader().setStyleSheet("color: #fff")
         self.tableActividades.setStyleSheet("border: 1px solid #000; font-size: 16px")
+        
         
 
         self.retranslateUi(MainWindow)
@@ -404,6 +410,7 @@ class Ui_MainWindow(object):
         self.groupBoxDatosPerl.setTitle(_translate("MainWindow", "Datos"))
         self.lblAct.setText(_translate("MainWindow", "Ingrese el número de actividades:"))
         self.btnGenerarPerl.setText(_translate("MainWindow", "GENERAR"))
+        self.btnCalcularPerl.setText(_translate("MainWindow", "CALCULAR"))
         
 
 if __name__ == "__main__":
