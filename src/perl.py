@@ -16,7 +16,9 @@ class Perl(QMainWindow):
     # Constructor
     def __init__(self, ui):
         super(Perl, self).__init__()
-        self.ui = ui
+        # self.ui = ui
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
         
         # Eventos
         self.ui.btnGenerarPerl.clicked.connect(self.generateTable)
@@ -42,3 +44,10 @@ class Perl(QMainWindow):
                 celda.setTextAlignment(Qt.AlignCenter)
                 self.ui.tableActividades.setItem(i, 0, celda)
             
+# Inicia la aplicación
+if __name__ == '__main__':    
+    app = QApplication([])
+    app.setStyle(QStyleFactory.create('Fusion'))
+    mi_App = Perl()
+    mi_App.show()
+    sys.exit(app.exec_())
