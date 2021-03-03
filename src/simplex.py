@@ -17,22 +17,13 @@ class Simplex(QMainWindow):
     cantRestricciones = 0
     
     # Constructor
-    def __init__(self, ui):
+    def __init__(self, ui, iconErr, iconSucc):
         super(Simplex, self).__init__()
         self.ui = ui
-        # self.ui.setupUi(self)
 
-        # Resolver Ruta
-        def resolver_ruta(ruta_relativa):
-            if hasattr(sys, "_MEIPASS"):
-                return os.path.join(sys._MEIPASS, ruta_relativa)
-            return os.path.join(os.path.abspath("."), ruta_relativa)
-        
-        # Definición de íconos
-        self.icoMain = resolver_ruta("src/assets/conta.ico")
-        self.icoError = resolver_ruta("src/assets/cancelar.ico")
-        self.icoSucess = resolver_ruta("src/assets/check.ico")
-        self.setWindowIcon(QIcon(self.icoMain))
+        # Iconos
+        self.icoError = iconErr
+        self.icoSucess = iconSucc
 
         # Eventos
         self.ui.btnGenerar.clicked.connect(self.generateArrays)

@@ -14,10 +14,14 @@ from reportlab.lib.units import inch
 
 class Perl(QMainWindow):
     # Constructor
-    def __init__(self, ui):
+    def __init__(self, ui, iconErr, iconSucc):
         super(Perl, self).__init__()
         self.ui = ui
-        
+
+        # Iconos
+        self.icoError = iconErr
+        self.icoSucess = iconSucc
+
         # Eventos
         self.ui.btnGenerarPerl.clicked.connect(self.generateTable)
         self.ui.btnCalcularPerl.clicked.connect(self.calcularPerl)
@@ -52,20 +56,30 @@ class Perl(QMainWindow):
         
     # Método: Calcula el valor de Dij
     def calculaDij(self, filas):
-        dij = []
-        for f in range(filas):
-            valores = []
-            for c in range(3):
-                valor = int(self.ui.tableActividades.item(f,c+3).text())
-                valores.append(valor)
-            
-            valorDij = (valores[0] + (4 * valores[1]) + valores[2]) / 6
-            valorDij = round(valorDij)
-            dij.append(valorDij)
-            
-            # Inserta los valores Dij en la tabla
-            celda = QTableWidgetItem(str(valorDij))
-            celda.setTextAlignment(Qt.AlignCenter)
-            self.ui.tableActividades.setItem(f, 6, celda)
-            
-        return dij
+        try:
+            dij = []
+            for f in range(filas):
+                valores = []
+                for c in range(3):
+                    valor = int(self.ui.tableActividades.item(f,c+3).text())
+                    valores.append(valor)
+                
+                valorDij = (valores[0] + (4 * valores[1]) + valores[2]) / 6
+                valorDij = round(valorDij)
+                dij.append(valorDij)
+                
+                # Inserta los valores Dij en la tabla
+                celda = QTableWidgetItem(str(valorDij))
+                celda.setTextAlignment(Qt.AlignCenter)
+                self.ui.tableActividades.setItem(f, 6, celda)
+                
+            return dij
+        except Exception as err:
+            print(err)
+            msjErr = "Ingrese los valores correctamente"
+            msgBox1 = QMessageBox()
+            msgBox1.setText(msjErr)
+            msgBox1.setWindowTitle("Error")
+            msgBox1.setWindowIcon(QIcon(self.icoError))
+            msgBox1.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+            msgBox1.exec_()

@@ -20,6 +20,8 @@ class MainWindow(QMainWindow):
         
         # Icono ventana
         self.icoMain = resolver_ruta("src/assets/conta.ico")
+        self.icoError = resolver_ruta("src/assets/cancelar.ico")
+        self.icoSucess = resolver_ruta("src/assets/check.ico")
         self.setWindowIcon(QIcon(self.icoMain))
         
         # Eventos
@@ -30,14 +32,14 @@ class MainWindow(QMainWindow):
     def showSimplexUI(self):
         self.ui.widgetPerl.setVisible(False)
         self.ui.widgetSimplex.setVisible(True)
-        self.simplex = Simplex(self.ui)
+        self.simplex = Simplex(self.ui, self.icoError, self.icoSucess)
         self.simplex.deleteData()
 
     # Método: Muestra la interfaz del modelo de redes
     def showPerlUI(self):
         self.ui.widgetSimplex.setVisible(False)
         self.ui.widgetPerl.setVisible(True)
-        self.perl = Perl(self.ui)
+        self.perl = Perl(self.ui, self.icoError, self.icoSucess)
     
 # Inicia la aplicación
 if __name__ == '__main__':    
