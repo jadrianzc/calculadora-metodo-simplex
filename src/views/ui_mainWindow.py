@@ -347,11 +347,11 @@ class Ui_MainWindow(object):
         self.btnGenerarPerl.setGeometry(QtCore.QRect(420, 35, 80, 30))
         self.btnGenerarPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnGenerarPerl.setObjectName("btnGenerarPerl")
-        # BTN CALCULAR PERL
-        self.btnCalcularPerl = QtWidgets.QPushButton(self.groupBoxDatosPerl)
-        self.btnCalcularPerl.setGeometry(QtCore.QRect(1000, 35, 80, 30))
-        self.btnCalcularPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.btnCalcularPerl.setObjectName("btnCalcularPerl")
+        # BTN GENERAR
+        self.btnNuevoPerl = QtWidgets.QPushButton(self.groupBoxDatosPerl)
+        self.btnNuevoPerl.setGeometry(QtCore.QRect(1000, 35, 80, 30))
+        self.btnNuevoPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnNuevoPerl.setObjectName("btnNuevoPerl")
         # GROUP BOX RESULTADO ACTIVIDADES
         self.groupBoxrResPerl = QtWidgets.QGroupBox(self.widgetPerl)
         self.groupBoxrResPerl.setGeometry(QtCore.QRect(30, 100, 1300, 580))
@@ -362,6 +362,7 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.groupBoxrResPerl.setFont(font)
         self.groupBoxrResPerl.setObjectName("groupBoxrResPerl")
+        self.groupBoxrResPerl.setVisible(False)
         # TABLA ACTIVIDADES
         self.tableActividades = QtWidgets.QTableWidget(self.groupBoxrResPerl)
         self.tableActividades.setGeometry(QtCore.QRect(5, 5, 1290, 575))
@@ -373,6 +374,52 @@ class Ui_MainWindow(object):
         self.tableActividades.horizontalHeader().setDefaultSectionSize(75)
         self.tableActividades.horizontalHeader().setStyleSheet("color: #fff")
         self.tableActividades.setStyleSheet("border: 1px solid #000; font-size: 16px")
+        # GROUP BOX DATOS ACTIVIDADES - INGRESO
+        self.groupBoxInputActv = QtWidgets.QGroupBox(self.widgetPerl)
+        self.groupBoxInputActv.setGeometry(QtCore.QRect(30, 100, 1300, 580))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBoxInputActv.setFont(font)
+        self.groupBoxInputActv.setObjectName("groupBoxInputActv")
+        self.groupBoxInputActv.setVisible(False)
+        # LABEL ACTIVIDAD
+        self.lblInputAct = QtWidgets.QLabel(self.groupBoxInputActv)
+        self.lblInputAct.setGeometry(QtCore.QRect(500, 5, 300, 20))
+        self.lblInputAct.setBaseSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.lblInputAct.setFont(font)
+        self.lblInputAct.setAutoFillBackground(False)
+        self.lblInputAct.setStyleSheet("")
+        self.lblInputAct.setObjectName("lblInputAct")
+        self.lblInputAct.setStyleSheet("font-size: 16px")
+         # TABLA ACTIVIDADES - INGRESO
+        self.tableInputActividades = QtWidgets.QTableWidget(self.groupBoxInputActv)
+        self.tableInputActividades.setGeometry(QtCore.QRect(290, 40, 718, 326))
+        self.tableInputActividades.setObjectName("tableInputActividades")
+        self.tableInputActividades.setColumnCount(0)
+        self.tableInputActividades.setRowCount(0)
+        self.tableInputActividades.verticalHeader().setVisible(False)
+        self.tableInputActividades.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignHCenter and QtCore.Qt.AlignVCenter and QtCore.Qt.AlignCenter)
+        self.tableInputActividades.horizontalHeader().setDefaultSectionSize(75)
+        self.tableInputActividades.horizontalHeader().setStyleSheet("color: #fff")
+        self.tableInputActividades.setStyleSheet("border: 1px solid #000; font-size: 16px")
+        # BTN CALCULAR PERL
+        self.btnCalcularPerl = QtWidgets.QPushButton(self.groupBoxInputActv)
+        self.btnCalcularPerl.setGeometry(QtCore.QRect(600, 380, 80, 30))
+        self.btnCalcularPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnCalcularPerl.setObjectName("btnCalcularPerl")
+        # BTN BORRAR PERL
+        self.btnBorrarPerl = QtWidgets.QPushButton(self.groupBoxInputActv)
+        self.btnBorrarPerl.setGeometry(QtCore.QRect(600, 420, 80, 30))
+        self.btnBorrarPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnBorrarPerl.setObjectName("btnBorrarPerl")
         
         
 
@@ -409,8 +456,12 @@ class Ui_MainWindow(object):
         #################################### UI - PERL ####################################
         self.groupBoxDatosPerl.setTitle(_translate("MainWindow", "Datos"))
         self.lblAct.setText(_translate("MainWindow", "Ingrese el número de actividades:"))
+        self.lblInputAct.setText(_translate("MainWindow", "Ingrese todos los datos para continuar"))
         self.btnGenerarPerl.setText(_translate("MainWindow", "GENERAR"))
+        self.btnNuevoPerl.setText(_translate("MainWindow", "NUEVO"))
         self.btnCalcularPerl.setText(_translate("MainWindow", "CALCULAR"))
+        self.btnBorrarPerl.setText(_translate("MainWindow", "BORRAR"))
+        
         
 
 if __name__ == "__main__":
