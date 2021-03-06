@@ -399,9 +399,23 @@ class Ui_MainWindow(object):
         self.lblInputAct.setStyleSheet("")
         self.lblInputAct.setObjectName("lblInputAct")
         self.lblInputAct.setStyleSheet("font-size: 16px")
-         # TABLA ACTIVIDADES - INGRESO
+        # LABEL INFORMACIÓN
+        self.lblInfo = QtWidgets.QLabel(self.groupBoxInputActv)
+        self.lblInfo.setGeometry(QtCore.QRect(315, 30, 800, 20))
+        self.lblInfo.setBaseSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.lblInfo.setFont(font)
+        self.lblInfo.setAutoFillBackground(False)
+        self.lblInfo.setStyleSheet("")
+        self.lblInfo.setObjectName("lblInfo")
+        self.lblInfo.setStyleSheet("font-size: 12px; font-style: italic")
+        # TABLA ACTIVIDADES - INGRESO
         self.tableInputActividades = QtWidgets.QTableWidget(self.groupBoxInputActv)
-        self.tableInputActividades.setGeometry(QtCore.QRect(290, 40, 718, 326))
+        self.tableInputActividades.setGeometry(QtCore.QRect(290, 60, 718, 326))
         self.tableInputActividades.setObjectName("tableInputActividades")
         self.tableInputActividades.setColumnCount(0)
         self.tableInputActividades.setRowCount(0)
@@ -412,16 +426,66 @@ class Ui_MainWindow(object):
         self.tableInputActividades.setStyleSheet("border: 1px solid #000; font-size: 16px")
         # BTN CALCULAR PERL
         self.btnCalcularPerl = QtWidgets.QPushButton(self.groupBoxInputActv)
-        self.btnCalcularPerl.setGeometry(QtCore.QRect(600, 380, 80, 30))
+        self.btnCalcularPerl.setGeometry(QtCore.QRect(600, 400, 80, 30))
         self.btnCalcularPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnCalcularPerl.setObjectName("btnCalcularPerl")
         # BTN BORRAR PERL
         self.btnBorrarPerl = QtWidgets.QPushButton(self.groupBoxInputActv)
-        self.btnBorrarPerl.setGeometry(QtCore.QRect(600, 420, 80, 30))
+        self.btnBorrarPerl.setGeometry(QtCore.QRect(600, 440, 80, 30))
         self.btnBorrarPerl.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnBorrarPerl.setObjectName("btnBorrarPerl")
-        
-        
+        # GROUP BOX DIAS NO LABORABLES
+        self.groupBoxDiasNoLab = QtWidgets.QGroupBox(self.groupBoxInputActv)
+        self.groupBoxDiasNoLab.setGeometry(QtCore.QRect(50, 60, 200, 326))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBoxDiasNoLab.setFont(font)
+        self.groupBoxDiasNoLab.setObjectName("groupBoxDiasNoLab")
+        # CHECKBOX DIAS
+        #Lunes
+        self.diaLunes = QtWidgets.QCheckBox("Lunes", self.groupBoxDiasNoLab)
+        self.diaLunes.move(20,30)
+        self.diaLunes.resize(100,40)
+        #Martes
+        self.diaMartes = QtWidgets.QCheckBox("Martes", self.groupBoxDiasNoLab)
+        self.diaMartes.move(20,70)
+        self.diaMartes.resize(100,40)
+        #Miercoles
+        self.diaMiercoles = QtWidgets.QCheckBox("Miercoles", self.groupBoxDiasNoLab)
+        self.diaMiercoles.move(20,110)
+        self.diaMiercoles.resize(100,40)
+        #Jueves
+        self.diaJueves = QtWidgets.QCheckBox("Jueves", self.groupBoxDiasNoLab)
+        self.diaJueves.move(20,150)
+        self.diaJueves.resize(100,40)
+        #Viernes
+        self.diaViernes = QtWidgets.QCheckBox("Viernes", self.groupBoxDiasNoLab)
+        self.diaViernes.move(20,190)
+        self.diaViernes.resize(100,40)
+        #Sabado
+        self.diaSabado = QtWidgets.QCheckBox("Sábado", self.groupBoxDiasNoLab)
+        self.diaSabado.move(20,230)
+        self.diaSabado.resize(100,40)
+        #Domingo
+        self.diaDomingo = QtWidgets.QCheckBox("Domingo", self.groupBoxDiasNoLab)
+        self.diaDomingo.move(20,270)
+        self.diaDomingo.resize(100,40)
+        # GROUP BOX FECHA INICIO PROYECTO
+        self.groupBoxFechInicio = QtWidgets.QGroupBox(self.groupBoxInputActv)
+        self.groupBoxFechInicio.setGeometry(QtCore.QRect(1050, 60, 200, 326))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBoxFechInicio.setFont(font)
+        self.groupBoxFechInicio.setObjectName("groupBoxFechInicio")
+        # CALENDARIO
+        self.calendario = QtWidgets.QCalendarWidget(self.groupBoxFechInicio)
+        self.calendario.setGeometry(2, 50, 190, 190) 
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -457,12 +521,13 @@ class Ui_MainWindow(object):
         self.groupBoxDatosPerl.setTitle(_translate("MainWindow", "Datos"))
         self.lblAct.setText(_translate("MainWindow", "Ingrese el número de actividades:"))
         self.lblInputAct.setText(_translate("MainWindow", "Ingrese todos los datos para continuar"))
+        self.lblInfo.setText(_translate("MainWindow", 'Los predecesores debe ingresarlos en mayúscula. Ej: "A" | "A-B-C". En caso de no tener predecesor ingrese "N/A".'))
         self.btnGenerarPerl.setText(_translate("MainWindow", "GENERAR"))
         self.btnNuevoPerl.setText(_translate("MainWindow", "NUEVO"))
         self.btnCalcularPerl.setText(_translate("MainWindow", "CALCULAR"))
         self.btnBorrarPerl.setText(_translate("MainWindow", "BORRAR"))
-        
-        
+        self.groupBoxDiasNoLab.setTitle(_translate("MainWindow", "       DÍAS NO LABORABLES"))
+        self.groupBoxFechInicio.setTitle(_translate("MainWindow", "       FECHA INICIO"))
 
 if __name__ == "__main__":
     import sys

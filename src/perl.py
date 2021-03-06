@@ -309,6 +309,8 @@ class Perl(QMainWindow):
         print(f"Tj0: {self.Tj0}")
         print(f"Tj1: {list(reversed(self.Tj1))}")
         
+        self.MTij = []
+        self.MLij = []
         tj1 = list(reversed(self.Tj1))
         ti0 = self.Ti0
         tj0 = self.Tj0
@@ -319,12 +321,26 @@ class Perl(QMainWindow):
             celdaMTij = QTableWidgetItem(str(mtij))
             celdaMTij.setTextAlignment(Qt.AlignCenter)
             self.ui.tableActividades.setItem(f, 12, celdaMTij)
-            
+            self.MTij.append(mtij)
+
             mlij = (tj0[f] - ti0[f] - dij[f])
             celdaMLij = QTableWidgetItem(str(mlij))
             celdaMLij.setTextAlignment(Qt.AlignCenter)
             self.ui.tableActividades.setItem(f, 13, celdaMLij)
-                    
+            self.MLij.append(mlij)
+        
+        # Búcle: colorea las actividades críticas
+        rutaCritica = [index for index in range(len(self.MTij)) if self.MTij[index] == 0]
+        print(f"Ruta Crítica: {rutaCritica}")
+        for ruta in rutaCritica:
+            for col in range(14):
+                data = self.ui.tableActividades.item(ruta,col).text()
+                print(f"Data: {data}")
+                valor = QTableWidgetItem(data)
+                valor.setBackground(QtGui.QColor(187, 187, 225))
+                valor.setTextAlignment(Qt.AlignCenter)
+                self.ui.tableActividades.setItem(ruta,col,valor)
+                               
     # Método: Genera un nuevo ejercicio
     def nuevoCalculo(self):
         self.ui.tableActividades.clear()
