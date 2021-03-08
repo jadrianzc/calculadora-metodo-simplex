@@ -8,7 +8,7 @@ import sys, re, os
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.platypus import (SimpleDocTemplate, PageBreak, Image, Spacer,Paragraph, Table, TableStyle)
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 
@@ -669,7 +669,7 @@ class Simplex(QMainWindow):
         autor, accept = QInputDialog.getText(self, 'Generar Reporte','Ingrese el nombre de quien genera el reporte:')
         if(accept):
             try:
-                doc = SimpleDocTemplate(f'Reporte_Simplex.pdf', pagesize = A4, topMargin=12)
+                doc = SimpleDocTemplate(f'Reporte_Simplex.pdf', pagesize=A4, topMargin=12)
                 alineacionTitulo = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=20, leading=40)
                 alineacionTituloTabla = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=14, leading=40)
                 alineacionAutor = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=11, leading=30)
@@ -700,7 +700,7 @@ class Simplex(QMainWindow):
                     for f in range(self.fila):
                         item = self.allTable[table][f]
                         self.arrayFila.append(item)
-                    
+                    print( self.arrayFila)
                     tabla = Table(self.arrayFila, colWidths=50, rowHeights=40)
                     tabla.setStyle([
                             ('GRID',(0,0),(-1,-1),2,colors.black),

@@ -8,7 +8,7 @@ import sys, re, os, string, re
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.platypus import (SimpleDocTemplate, PageBreak, Image, Spacer,Paragraph, Table, TableStyle)
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A3, landscape
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 from datetime import datetime
@@ -31,8 +31,9 @@ class Perl(QMainWindow):
         # self.ui.btnGenerarPerl.clicked.connect(self.generateTable)
         self.ui.btnGenerarPerl.clicked.connect(self.dataActividades)
         self.ui.btnNuevoPerl.clicked.connect(self.nuevoCalculo)
+        self.ui.btnGuardar.clicked.connect(self.generarReporte)
         self.ui.btnCalcularPerl.clicked.connect(self.generateTable)
-        self.ui.btnBorrarPerl.clicked.connect(self.deletaTable)
+        self.ui.btnBorrarPerl.clicked.connect(self.nuevoCalculo)
         self.ui.calendario.clicked.connect(self.obtenerFecha)
     
     # Método: Muestra otra ventana para ingresar los datos
@@ -169,11 +170,11 @@ class Perl(QMainWindow):
         self.cantidadActividades = self.ui.inputAct.value()
         data = self.validarTable()
         
-        print(f"DATAAAAAA: {data}")
         if(data != None):            
             self.ui.groupBoxInputActv.setVisible(False)
             self.ui.groupBoxrResPerl.setVisible(True)
             self.ui.btnGenerarPerl.setEnabled(False)
+            self.ui.btnNuevoPerl.setEnabled(True)
             self.Predecesores = []
             
             self.ui.tableActividades.setRowCount(self.cantidadActividades)
@@ -374,59 +375,31 @@ class Perl(QMainWindow):
     # Método: Calcula las fechas
     def calcuFecha(self, tiempo):
         self.fechaLab = self.fechInicio
-        self.fechaLabVali = self.fechInicio
-        print(f"TIEMPO: {tiempo}")
         i = 0
         while(i < tiempo):
             if(i == 0):
                 dia = self.fechInicio + timedelta(days=i)
             else:
                 self.fechaLab = self.fechaLab + timedelta(days=1)
-                print(f"TIEMPO{i}: {self.fechaLab}")
                 diaActual = self.fechaLab.strftime("%A")
-                print(diaActual)
                 
                 if(diaActual in self.diasNoLab):
-                    print(self.diasNoLab)
                     i -= 1
             i += 1
-        print(f"TIEMPOOOOOOOOOOOOOOOOOOOO: {self.fechaLab}")
+
         return self.fechaLab
-        
         
     # Método: Calcula e inserta las fechas
     def generateDate(self, filas):
-        print(f"Actividades: {self.Actividades}")
-        print(f"Dij: {self.DijOij[0]}")
-        print(f"Oij: {self.DijOij[1]}")
-        print(f"Predecesora: {self.Predecesores}")
-        print(f"Ti0: {self.Ti0}")
-        print(f"Ti1: {list(reversed(self.Ti1))}")
-        print(f"Tj0: {self.Tj0}")
-        print(f"Tj1: {list(reversed(self.Tj1))}")
-        print(f"Fecha Inicio: {self.fechInicio}")
-        print(f"Días no Laborables: {self.diasNoLab}")
-        
-        # print(self.fechInicio)
-        # print(self.fechInicio + timedelta(days=2))
-        # dia = self.fechInicio.strftime("%A")
-        # self.fechInicio.strftime("%d/%m/%Y")
-        
+       
         self.Ti1 = list(reversed(self.Ti1))
         self.Tj1 = list(reversed(self.Tj1))
         for f in range(filas):
-            print(f"self.Ti1: {self.Ti1}")
-            print(f"self.Tj1: {self.Tj1}")
             
             ti0 = self.Ti0[f]
             ti1 = self.Ti1[f]
             tj0 = self.Tj0[f]
             tj1 = self.Tj1[f]
-            
-            print(f"VRGAAAAA TI0: {ti0}")
-            print(f"VRGAAAAA ti1: {ti1}")
-            print(f"VRGAAAAA tj0: {tj0}")
-            print(f"VRGAAAAA tj1: {tj1}")
 
             # Fecha Inicio Temprano
             fi0 = self.calcuFecha(ti0)
@@ -454,7 +427,7 @@ class Perl(QMainWindow):
             
         # Búcle: colorea las actividades críticas
         rutaCritica = [index for index in range(len(self.MTij)) if self.MTij[index] == 0]
-        print(f"Ruta Crítica: {rutaCritica}")
+
         for ruta in rutaCritica:
             for col in range(18):
                 data = self.ui.tableActividades.item(ruta,col).text()
@@ -463,7 +436,19 @@ class Perl(QMainWindow):
                 valor.setTextAlignment(Qt.AlignCenter)
                 self.ui.tableActividades.setItem(ruta,col,valor)
         
-                              
+        self.showResult(rutaCritica, filas)
+    # Método: Muestra los resultados
+    def showResult(self, rutaCritica, filas):
+        self.rutaCritica = []
+        for i in rutaCritica:
+            self.rutaCritica.append(self.Actividades[i])
+        
+        rCritica = "-".join(self.rutaCritica)
+        self.ui.lblRutaCritica.setText(f"Ruta Crítica: {rCritica}")
+        self.ui.lblInicioProyecto.setText(f"Fecha Inicio: {self.fechInicio.strftime('%d/%m/%Y')}")
+        self.ui.lblFinProyecto.setText(f"Fecha Final: {self.ui.tableActividades.item(filas-1,17).text()}")
+        self.ui.lblDiasProyecto.setText(f"Total de días: {max(self.Tj0)}")
+         
     # Método: Genera un nuevo ejercicio
     def nuevoCalculo(self):
         self.ui.tableActividades.clear()
@@ -471,8 +456,89 @@ class Perl(QMainWindow):
         self.ui.groupBoxrResPerl.setVisible(False)
         self.ui.groupBoxInputActv.setVisible(True)
         self.ui.btnGenerarPerl.setEnabled(True)
-             
-    # Método: Elimina las tablas
-    def deletaTable(self):
-        # Eliminar las tablas
-        self.ui.tableInputActividades.setRowCount(0)
+        self.ui.btnNuevoPerl.setEnabled(False)
+        
+        self.ui.diaLunes.setChecked(False)
+        self.ui.diaMartes.setChecked(False)
+        self.ui.diaMiercoles.setChecked(False)
+        self.ui.diaJueves.setChecked(False)
+        self.ui.diaViernes.setChecked(False)
+        self.ui.diaSabado.setChecked(False)
+        self.ui.diaDomingo.setChecked(False)
+        
+    # Método: Genera el reporte pdf
+    def generarReporte(self):
+        autor, accept = QInputDialog.getText(self, 'Generar Reporte','Ingrese el nombre de quien genera el reporte:')
+        if(accept):
+            try:
+                doc = SimpleDocTemplate(f'Reporte_Pert.pdf', pagesize=landscape(A3), topMargin=12)
+                alineacionTitulo = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=20, leading=40)
+                alineacionTituloTabla = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=14, leading=40)
+                alineacionAutor = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=11, leading=30)
+                alineacionOpTable = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=12, leading=40)
+                alineacionResultados = ParagraphStyle(name="centrar", alignment=TA_LEFT, fontSize=12, leading=30)
+                alineacionRestr = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=12, leading=30)
+                
+                story=[]
+                titulo = "REPORTE MÉTODO PERT"
+                
+                if(autor != ""):
+                    autor = f'AUTOR:  {autor.upper()}'
+                else:
+                    autor = ""
+                    
+                story.append(Paragraph(titulo, alineacionTitulo))
+                story.append(Paragraph(autor, alineacionAutor))
+                
+                story.append(Paragraph(f"{self.ui.lblRutaCritica.text()}", alineacionResultados))
+                story.append(Paragraph(f"{self.ui.lblInicioProyecto.text()}", alineacionResultados))  
+                story.append(Paragraph(f"{self.ui.lblFinProyecto.text()}", alineacionResultados))
+                story.append(Paragraph(f"{self.ui.lblDiasProyecto.text()}", alineacionResultados))
+                
+                self.fullTable = [self.header]
+                for f in range(self.cantidadActividades):
+                    self.arrayFila = []
+                    for c in range(18):
+                        item = self.ui.tableActividades.item(f,c).text()
+                        self.arrayFila.append(item)
+                     
+                    self.fullTable.append(self.arrayFila)  
+                       
+                tabla = Table(self.fullTable, colWidths=[60,80,65,40,40,40,40,40,40,40,40,40,40,40,120,100,120,100], rowHeights=40)
+                tabla.setStyle([
+                        ('GRID',(0,0),(-1,-1),2,colors.black),
+                        ('BOX',(0,0),(-1,-1),2,colors.black),
+                        ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#16145A')),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#ffffff'))
+                ])
+                    
+                    
+                story.append(tabla)
+                        
+                doc.build(story)
+                
+                msjErr = "Reporte generado correctamente"
+                msgBox5 = QMessageBox()
+                msgBox5.setText(msjErr)
+                msgBox5.setWindowTitle("Éxito")
+                msgBox5.setWindowIcon(QIcon(self.icoSucess))
+                msgBox5.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+                msgBox5.exec_()
+                
+                # os.system("Reporte_Pert.pdf && exit")
+                # ruta = QFileDialog().getSaveFileName(None, "Guardar archivo como", "", "Pdf (*.pdf)")
+                # if ruta[0] != '':
+                #     with open(ruta[0], "w", encoding='utf-8') as archivo:
+                #         archivo.write('Reporte_Pert.pdf')
+                    
+            except PermissionError:
+                msjErr = "Ocurrió un error al generar el reporte"
+                msgBox6 = QMessageBox()
+                msgBox6.setText(msjErr)
+                msgBox6.setWindowTitle("Error")
+                msgBox6.setWindowIcon(QIcon(self.icoError))
+                msgBox6.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+                msgBox6.exec_()
+            
