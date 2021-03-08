@@ -11,6 +11,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import inch
+from datetime import datetime
+from datetime import timedelta
 
 class Perl(QMainWindow):
     # Constructor
@@ -21,6 +23,9 @@ class Perl(QMainWindow):
         # Iconos
         self.icoError = iconErr
         self.icoSucess = iconSucc
+        
+        # Atributos
+        self.fechInicio = ""
 
         # Eventos
         # self.ui.btnGenerarPerl.clicked.connect(self.generateTable)
@@ -28,6 +33,7 @@ class Perl(QMainWindow):
         self.ui.btnNuevoPerl.clicked.connect(self.nuevoCalculo)
         self.ui.btnCalcularPerl.clicked.connect(self.generateTable)
         self.ui.btnBorrarPerl.clicked.connect(self.deletaTable)
+        self.ui.calendario.clicked.connect(self.obtenerFecha)
     
     # Método: Muestra otra ventana para ingresar los datos
     def dataActividades(self):
@@ -56,7 +62,43 @@ class Perl(QMainWindow):
             celda.setTextAlignment(Qt.AlignCenter)
             celda.setFlags(Qt.ItemIsEnabled)
             self.ui.tableInputActividades.setItem(i, 0, celda)
-      
+     
+    # Método: Obtiene la fecha del calendario
+    def obtenerFecha(self):
+        self.fechInicio = self.ui.calendario.selectedDate().toPyDate()
+    
+    # Método: Obtine los días no laborables
+    def getDiasNoLab(self):
+        self.diasNoLab = []
+        
+        if(self.ui.diaLunes.isChecked()):
+            dia = "Monday"
+            self.diasNoLab.append(dia)
+            
+        if(self.ui.diaMartes.isChecked()):
+            dia = "Tuesday"
+            self.diasNoLab.append(dia)
+            
+        if(self.ui.diaMiercoles.isChecked()):
+            dia = "Wednesday"
+            self.diasNoLab.append(dia)
+            
+        if(self.ui.diaJueves.isChecked()):
+            dia = "Thursday"
+            self.diasNoLab.append(dia)
+            
+        if(self.ui.diaViernes.isChecked()):
+            dia = "Friday"
+            self.diasNoLab.append(dia)
+            
+        if(self.ui.diaSabado.isChecked()):
+            dia = "Saturday"
+            self.diasNoLab.append(dia)
+            
+        if(self.ui.diaDomingo.isChecked()):
+            dia = "Sunday"
+            self.diasNoLab.append(dia)
+       
     # Método: Valida la tabla
     def validarTable(self):
         # Bucle: Almacenamos todos los datos de la tabla
@@ -87,8 +129,15 @@ class Perl(QMainWindow):
                         
                     filaData.append(str(valor))
                 self.dataTablePerlInput.append(filaData)
- 
-            return self.dataTablePerlInput
+            
+            # Obtiene la fecha inicio
+            if(self.fechInicio == ""):
+                 raise Exception('Por favor, ingrese la fecha que inicia el proyecto')
+            
+            # Verifica días no laborables
+            self.getDiasNoLab()
+            
+            return self.dataTablePerlInput, self.fechInicio
         except AttributeError:
             msjErr = "Ingrese todos los valores correctamente"
             msgBox2 = QMessageBox()
@@ -106,7 +155,6 @@ class Perl(QMainWindow):
             msgBox2.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox2.exec_()
         except Exception as err:
-            print(err)
             msjErr = str(err)
             msgBox2 = QMessageBox()
             msgBox2.setText(msjErr)
@@ -119,9 +167,10 @@ class Perl(QMainWindow):
     def generateTable(self):
         self.ui.tableActividades.clear()
         self.cantidadActividades = self.ui.inputAct.value()
-        
         data = self.validarTable()
-        if(data != None):
+        
+        print(f"DATAAAAAA: {data}")
+        if(data != None):            
             self.ui.groupBoxInputActv.setVisible(False)
             self.ui.groupBoxrResPerl.setVisible(True)
             self.ui.btnGenerarPerl.setEnabled(False)
@@ -143,7 +192,7 @@ class Perl(QMainWindow):
             # Bucle: Inserta los valores en la tabla final
             for f in range(self.cantidadActividades):
                 for c in range(6):
-                    celda = QTableWidgetItem(data[f][c])
+                    celda = QTableWidgetItem(data[0][f][c])
                     celda.setTextAlignment(Qt.AlignCenter)
                     self.ui.tableActividades.setItem(f, c, celda)
             
@@ -300,15 +349,6 @@ class Perl(QMainWindow):
         
     # Método: Genera los valores de los Margenes Totales y Libres
     def calcularMtMl(self, filas):
-        print(f"Actividades: {self.Actividades}")
-        print(f"Dij: {self.DijOij[0]}")
-        print(f"Oij: {self.DijOij[1]}")
-        print(f"Predecesora: {self.Predecesores}")
-        print(f"Ti0: {self.Ti0}")
-        print(f"Ti1: {list(reversed(self.Ti1))}")
-        print(f"Tj0: {self.Tj0}")
-        print(f"Tj1: {list(reversed(self.Tj1))}")
-        
         self.MTij = []
         self.MLij = []
         tj1 = list(reversed(self.Tj1))
@@ -328,19 +368,102 @@ class Perl(QMainWindow):
             celdaMLij.setTextAlignment(Qt.AlignCenter)
             self.ui.tableActividades.setItem(f, 13, celdaMLij)
             self.MLij.append(mlij)
+
+        self.generateDate(filas)
         
+    # Método: Calcula las fechas
+    def calcuFecha(self, tiempo):
+        self.fechaLab = self.fechInicio
+        self.fechaLabVali = self.fechInicio
+        print(f"TIEMPO: {tiempo}")
+        i = 0
+        while(i < tiempo):
+            if(i == 0):
+                dia = self.fechInicio + timedelta(days=i)
+            else:
+                self.fechaLab = self.fechaLab + timedelta(days=1)
+                print(f"TIEMPO{i}: {self.fechaLab}")
+                diaActual = self.fechaLab.strftime("%A")
+                print(diaActual)
+                
+                if(diaActual in self.diasNoLab):
+                    print(self.diasNoLab)
+                    i -= 1
+            i += 1
+        print(f"TIEMPOOOOOOOOOOOOOOOOOOOO: {self.fechaLab}")
+        return self.fechaLab
+        
+        
+    # Método: Calcula e inserta las fechas
+    def generateDate(self, filas):
+        print(f"Actividades: {self.Actividades}")
+        print(f"Dij: {self.DijOij[0]}")
+        print(f"Oij: {self.DijOij[1]}")
+        print(f"Predecesora: {self.Predecesores}")
+        print(f"Ti0: {self.Ti0}")
+        print(f"Ti1: {list(reversed(self.Ti1))}")
+        print(f"Tj0: {self.Tj0}")
+        print(f"Tj1: {list(reversed(self.Tj1))}")
+        print(f"Fecha Inicio: {self.fechInicio}")
+        print(f"Días no Laborables: {self.diasNoLab}")
+        
+        # print(self.fechInicio)
+        # print(self.fechInicio + timedelta(days=2))
+        # dia = self.fechInicio.strftime("%A")
+        # self.fechInicio.strftime("%d/%m/%Y")
+        
+        self.Ti1 = list(reversed(self.Ti1))
+        self.Tj1 = list(reversed(self.Tj1))
+        for f in range(filas):
+            print(f"self.Ti1: {self.Ti1}")
+            print(f"self.Tj1: {self.Tj1}")
+            
+            ti0 = self.Ti0[f]
+            ti1 = self.Ti1[f]
+            tj0 = self.Tj0[f]
+            tj1 = self.Tj1[f]
+            
+            print(f"VRGAAAAA TI0: {ti0}")
+            print(f"VRGAAAAA ti1: {ti1}")
+            print(f"VRGAAAAA tj0: {tj0}")
+            print(f"VRGAAAAA tj1: {tj1}")
+
+            # Fecha Inicio Temprano
+            fi0 = self.calcuFecha(ti0)
+            diaStr = QTableWidgetItem(fi0.strftime("%d/%m/%Y"))
+            diaStr.setTextAlignment(Qt.AlignCenter)
+            self.ui.tableActividades.setItem(f,14,diaStr)
+            
+            # Fecha Inicio Tardio
+            fi1 = self.calcuFecha(ti1)
+            diaStr = QTableWidgetItem(fi1.strftime("%d/%m/%Y"))
+            diaStr.setTextAlignment(Qt.AlignCenter)
+            self.ui.tableActividades.setItem(f,15,diaStr)
+            
+            # Fecha Fin Temprano
+            fj0 = self.calcuFecha(tj0)
+            diaStr = QTableWidgetItem(fj0.strftime("%d/%m/%Y"))
+            diaStr.setTextAlignment(Qt.AlignCenter)
+            self.ui.tableActividades.setItem(f,16,diaStr)
+            
+            # Fecha Fin Tardio
+            fj1 = self.calcuFecha(tj1)
+            diaStr = QTableWidgetItem(fj1.strftime("%d/%m/%Y"))
+            diaStr.setTextAlignment(Qt.AlignCenter)
+            self.ui.tableActividades.setItem(f,17,diaStr)
+            
         # Búcle: colorea las actividades críticas
         rutaCritica = [index for index in range(len(self.MTij)) if self.MTij[index] == 0]
         print(f"Ruta Crítica: {rutaCritica}")
         for ruta in rutaCritica:
-            for col in range(14):
+            for col in range(18):
                 data = self.ui.tableActividades.item(ruta,col).text()
-                print(f"Data: {data}")
                 valor = QTableWidgetItem(data)
                 valor.setBackground(QtGui.QColor(187, 187, 225))
                 valor.setTextAlignment(Qt.AlignCenter)
                 self.ui.tableActividades.setItem(ruta,col,valor)
-                               
+        
+                              
     # Método: Genera un nuevo ejercicio
     def nuevoCalculo(self):
         self.ui.tableActividades.clear()

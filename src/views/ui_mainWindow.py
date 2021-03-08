@@ -415,7 +415,7 @@ class Ui_MainWindow(object):
         self.lblInfo.setStyleSheet("font-size: 12px; font-style: italic")
         # TABLA ACTIVIDADES - INGRESO
         self.tableInputActividades = QtWidgets.QTableWidget(self.groupBoxInputActv)
-        self.tableInputActividades.setGeometry(QtCore.QRect(290, 60, 718, 326))
+        self.tableInputActividades.setGeometry(QtCore.QRect(254, 60, 718, 326))
         self.tableInputActividades.setObjectName("tableInputActividades")
         self.tableInputActividades.setColumnCount(0)
         self.tableInputActividades.setRowCount(0)
@@ -436,7 +436,7 @@ class Ui_MainWindow(object):
         self.btnBorrarPerl.setObjectName("btnBorrarPerl")
         # GROUP BOX DIAS NO LABORABLES
         self.groupBoxDiasNoLab = QtWidgets.QGroupBox(self.groupBoxInputActv)
-        self.groupBoxDiasNoLab.setGeometry(QtCore.QRect(50, 60, 200, 326))
+        self.groupBoxDiasNoLab.setGeometry(QtCore.QRect(3, 60, 240, 326))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -475,7 +475,7 @@ class Ui_MainWindow(object):
         self.diaDomingo.resize(100,40)
         # GROUP BOX FECHA INICIO PROYECTO
         self.groupBoxFechInicio = QtWidgets.QGroupBox(self.groupBoxInputActv)
-        self.groupBoxFechInicio.setGeometry(QtCore.QRect(1050, 60, 200, 326))
+        self.groupBoxFechInicio.setGeometry(QtCore.QRect(980, 60, 312, 326))
         font = QtGui.QFont()
         font.setFamily("Century Gothic")
         font.setPointSize(10)
@@ -483,9 +483,26 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.groupBoxFechInicio.setFont(font)
         self.groupBoxFechInicio.setObjectName("groupBoxFechInicio")
+        # GROUP BOX CONTENDOR FECHA INICIO PROYECTO
+        self.groupBoxContenedorFech = QtWidgets.QGroupBox(self.groupBoxFechInicio)
+        self.groupBoxContenedorFech.setGeometry(QtCore.QRect(0, 50, 312, 200))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBoxContenedorFech.setFont(font)
+        self.groupBoxContenedorFech.setObjectName("groupBoxContenedorFech")
+        self.groupBoxContenedorFech.setStyleSheet("background: #C1C0C0")
         # CALENDARIO
-        self.calendario = QtWidgets.QCalendarWidget(self.groupBoxFechInicio)
-        self.calendario.setGeometry(2, 50, 190, 190) 
+        self.calendario = QtWidgets.QCalendarWidget(self.groupBoxContenedorFech)
+        self.calendario.setGeometry(0, 0, 312, 200) 
+        self.calendario.setGridVisible(True)
+        self.calendario.verticalHeaderFormat()
+        self.calendario.setVerticalHeaderFormat(QtWidgets.QCalendarWidget.NoVerticalHeader)
+        self.calendario.setNavigationBarVisible(True)
+        self.calendario.setStyleSheet("color: #000")
+        self.calendario.setObjectName("calendario")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -526,8 +543,8 @@ class Ui_MainWindow(object):
         self.btnNuevoPerl.setText(_translate("MainWindow", "NUEVO"))
         self.btnCalcularPerl.setText(_translate("MainWindow", "CALCULAR"))
         self.btnBorrarPerl.setText(_translate("MainWindow", "BORRAR"))
-        self.groupBoxDiasNoLab.setTitle(_translate("MainWindow", "       DÍAS NO LABORABLES"))
-        self.groupBoxFechInicio.setTitle(_translate("MainWindow", "       FECHA INICIO"))
+        self.groupBoxDiasNoLab.setTitle(_translate("MainWindow", "DÍAS NO LABORABLES"))
+        self.groupBoxFechInicio.setTitle(_translate("MainWindow", "FECHA INICIO"))
 
 if __name__ == "__main__":
     import sys
