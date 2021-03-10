@@ -358,7 +358,12 @@ class Ui_MainWindow(object):
         self.btnGuardar.setGeometry(QtCore.QRect(1100, 35, 80, 30))
         self.btnGuardar.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btnGuardar.setObjectName("btnGuardar")
-        self.btnGuardar.setEnabled(True)
+        self.btnGuardar.setEnabled(False)
+        # BTN SALIR
+        self.btnSalirPert = QtWidgets.QPushButton(self.groupBoxDatosPerl)
+        self.btnSalirPert.setGeometry(QtCore.QRect(1200, 35, 80, 30))
+        self.btnSalirPert.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnSalirPert.setObjectName("btnSalirPert")
         # GROUP BOX RESULTADO ACTIVIDADES
         self.groupBoxrResPerl = QtWidgets.QGroupBox(self.widgetPerl)
         self.groupBoxrResPerl.setGeometry(QtCore.QRect(30, 100, 1300, 580))
@@ -566,6 +571,7 @@ class Ui_MainWindow(object):
         self.calendario.setNavigationBarVisible(True)
         self.calendario.setStyleSheet("color: #000")
         self.calendario.setObjectName("calendario")
+        
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -605,6 +611,7 @@ class Ui_MainWindow(object):
         self.btnGenerarPerl.setText(_translate("MainWindow", "GENERAR"))
         self.btnNuevoPerl.setText(_translate("MainWindow", "NUEVO"))
         self.btnGuardar.setText(_translate("MainWindow", "GUARDAR"))
+        self.btnSalirPert.setText(_translate("MainWindow", "SALIR"))
         self.btnCalcularPerl.setText(_translate("MainWindow", "CALCULAR"))
         self.btnBorrarPerl.setText(_translate("MainWindow", "BORRAR"))
         self.groupBoxDiasNoLab.setTitle(_translate("MainWindow", "DÍAS NO LABORABLES"))

@@ -28,12 +28,12 @@ class Perl(QMainWindow):
         self.fechInicio = ""
 
         # Eventos
-        # self.ui.btnGenerarPerl.clicked.connect(self.generateTable)
         self.ui.btnGenerarPerl.clicked.connect(self.dataActividades)
         self.ui.btnNuevoPerl.clicked.connect(self.nuevoCalculo)
         self.ui.btnGuardar.clicked.connect(self.generarReporte)
+        self.ui.btnSalirPert.clicked.connect(self.exitApp)
         self.ui.btnCalcularPerl.clicked.connect(self.generateTable)
-        self.ui.btnBorrarPerl.clicked.connect(self.nuevoCalculo)
+        self.ui.btnBorrarPerl.clicked.connect(self.borrarTable)
         self.ui.calendario.clicked.connect(self.obtenerFecha)
     
     # Método: Muestra otra ventana para ingresar los datos
@@ -175,6 +175,7 @@ class Perl(QMainWindow):
             self.ui.groupBoxrResPerl.setVisible(True)
             self.ui.btnGenerarPerl.setEnabled(False)
             self.ui.btnNuevoPerl.setEnabled(True)
+            self.ui.btnGuardar.setEnabled(True)
             self.Predecesores = []
             
             self.ui.tableActividades.setRowCount(self.cantidadActividades)
@@ -452,12 +453,12 @@ class Perl(QMainWindow):
     # Método: Genera un nuevo ejercicio
     def nuevoCalculo(self):
         self.ui.tableActividades.clear()
-        self.ui.tableInputActividades.setRowCount(0)
+        self.ui.tableInputActividades.clear()
+        self.ui.groupBoxInputActv.setVisible(False)
         self.ui.groupBoxrResPerl.setVisible(False)
-        self.ui.groupBoxInputActv.setVisible(True)
         self.ui.btnGenerarPerl.setEnabled(True)
         self.ui.btnNuevoPerl.setEnabled(False)
-        
+        self.ui.btnGuardar.setEnabled(False)
         self.ui.diaLunes.setChecked(False)
         self.ui.diaMartes.setChecked(False)
         self.ui.diaMiercoles.setChecked(False)
@@ -465,6 +466,26 @@ class Perl(QMainWindow):
         self.ui.diaViernes.setChecked(False)
         self.ui.diaSabado.setChecked(False)
         self.ui.diaDomingo.setChecked(False)
+        
+    
+    # Método: Borra las filas y datos de las checkboxs
+    def borrarTable(self):
+        self.ui.tableInputActividades.setRowCount(0)
+        self.ui.diaLunes.setChecked(False)
+        self.ui.diaMartes.setChecked(False)
+        self.ui.diaMiercoles.setChecked(False)
+        self.ui.diaJueves.setChecked(False)
+        self.ui.diaViernes.setChecked(False)
+        self.ui.diaSabado.setChecked(False)
+        self.ui.diaDomingo.setChecked(False)
+    
+    # Método: Cierra el programa
+    def exitApp(self):
+        # app = QApplication([])
+        # sys.exit(app.exec_())
+        self.ui.widgetSimplex.setVisible(False)
+        self.ui.widgetPerl.setVisible(False)
+        self.ui.groupBoxInputActv.setVisible(False)
         
     # Método: Genera el reporte pdf
     def generarReporte(self):
@@ -513,8 +534,7 @@ class Perl(QMainWindow):
                         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#16145A')),
                         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#ffffff'))
                 ])
-                    
-                    
+                       
                 story.append(tabla)
                         
                 doc.build(story)
@@ -526,13 +546,9 @@ class Perl(QMainWindow):
                 msgBox5.setWindowIcon(QIcon(self.icoSucess))
                 msgBox5.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
                 msgBox5.exec_()
-                
-                # os.system("Reporte_Pert.pdf && exit")
-                # ruta = QFileDialog().getSaveFileName(None, "Guardar archivo como", "", "Pdf (*.pdf)")
-                # if ruta[0] != '':
-                #     with open(ruta[0], "w", encoding='utf-8') as archivo:
-                #         archivo.write('Reporte_Pert.pdf')
-                    
+
+                os.system("Reporte_Pert.pdf && exit")
+
             except PermissionError:
                 msjErr = "Ocurrió un error al generar el reporte"
                 msgBox6 = QMessageBox()
@@ -541,4 +557,3 @@ class Perl(QMainWindow):
                 msgBox6.setWindowIcon(QIcon(self.icoError))
                 msgBox6.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
                 msgBox6.exec_()
-            

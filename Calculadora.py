@@ -39,6 +39,7 @@ class MainWindow(QMainWindow):
     def showPerlUI(self):
         self.ui.widgetSimplex.setVisible(False)
         self.ui.widgetPerl.setVisible(True)
+        self.ui.groupBoxInputActv.setVisible(False)
         self.perl = Perl(self.ui, self.icoError, self.icoSucess)
     
 # Inicia la aplicación
