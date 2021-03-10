@@ -17,13 +17,14 @@ class Simplex(QMainWindow):
     cantRestricciones = 0
     
     # Constructor
-    def __init__(self, ui, iconErr, iconSucc):
+    def __init__(self, ui, iconErr, iconSucc, iconMain):
         super(Simplex, self).__init__()
         self.ui = ui
 
         # Iconos
         self.icoError = iconErr
         self.icoSucess = iconSucc
+        self.setWindowIcon(QIcon(iconMain))
 
         # Eventos
         self.ui.btnGenerar.clicked.connect(self.generateArrays)

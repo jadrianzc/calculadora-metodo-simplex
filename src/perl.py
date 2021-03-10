@@ -16,13 +16,14 @@ from datetime import timedelta
 
 class Perl(QMainWindow):
     # Constructor
-    def __init__(self, ui, iconErr, iconSucc):
+    def __init__(self, ui, iconErr, iconSucc, iconMain):
         super(Perl, self).__init__()
         self.ui = ui
 
         # Iconos
         self.icoError = iconErr
         self.icoSucess = iconSucc
+        self.setWindowIcon(QIcon(iconMain))
         
         # Atributos
         self.fechInicio = ""

@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
     def showSimplexUI(self):
         self.ui.widgetPerl.setVisible(False)
         self.ui.widgetSimplex.setVisible(True)
-        self.simplex = Simplex(self.ui, self.icoError, self.icoSucess)
+        self.simplex = Simplex(self.ui, self.icoError, self.icoSucess, self.icoMain)
         self.simplex.deleteData()
 
     # Método: Muestra la interfaz del modelo de redes
@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         self.ui.widgetSimplex.setVisible(False)
         self.ui.widgetPerl.setVisible(True)
         self.ui.groupBoxInputActv.setVisible(False)
-        self.perl = Perl(self.ui, self.icoError, self.icoSucess)
+        self.perl = Perl(self.ui, self.icoError, self.icoSucess, self.icoMain)
     
 # Inicia la aplicación
 if __name__ == '__main__':    
