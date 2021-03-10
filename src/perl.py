@@ -174,8 +174,11 @@ class Perl(QMainWindow):
             self.ui.groupBoxInputActv.setVisible(False)
             self.ui.groupBoxrResPerl.setVisible(True)
             self.ui.btnGenerarPerl.setEnabled(False)
+            self.ui.opacity_effectGeneraPert.setOpacity(0.3)
             self.ui.btnNuevoPerl.setEnabled(True)
+            self.ui.opacity_effectNuevoPert.setOpacity(1) 
             self.ui.btnGuardar.setEnabled(True)
+            self.ui.opacity_effectGuardar.setOpacity(1) 
             self.Predecesores = []
             
             self.ui.tableActividades.setRowCount(self.cantidadActividades)
@@ -457,8 +460,11 @@ class Perl(QMainWindow):
         self.ui.groupBoxInputActv.setVisible(False)
         self.ui.groupBoxrResPerl.setVisible(False)
         self.ui.btnGenerarPerl.setEnabled(True)
+        self.ui.opacity_effectGeneraPert.setOpacity(1)
         self.ui.btnNuevoPerl.setEnabled(False)
+        self.ui.opacity_effectNuevoPert.setOpacity(0.3)
         self.ui.btnGuardar.setEnabled(False)
+        self.ui.opacity_effectGuardar.setOpacity(0.3)
         self.ui.diaLunes.setChecked(False)
         self.ui.diaMartes.setChecked(False)
         self.ui.diaMiercoles.setChecked(False)

@@ -57,6 +57,7 @@ class Simplex(QMainWindow):
             self.ui.tableRestr.setHorizontalHeaderItem(j,item1)
 
         self.ui.btnCalcular.setEnabled(True)
+        self.ui.opacity_effectCalc.setOpacity(1)
     
     # Método: Genera la tabla de la función objetivo
     def tablaFuncionObjetivo(self, variables):
@@ -219,9 +220,13 @@ class Simplex(QMainWindow):
             
             # Deshabilita el botón calcular y generar
             self.ui.btnCalcular.setEnabled(False)
+            self.ui.opacity_effectCalc.setOpacity(0.3)
             self.ui.btnGenerar.setEnabled(False)
+            self.ui.opacity_effectGenerar.setOpacity(0.3)
             self.ui.btnNextTabla.setEnabled(True)
+            self.ui.opacity_effectNext.setOpacity(1) 
             self.ui.btnCalPibote.setEnabled(True)
+            self.ui.opacity_effectPibote.setOpacity(1)
             self.ui.btnCalPibote.setFocus()
             
             # Deshabilita las tablas
@@ -371,8 +376,11 @@ class Simplex(QMainWindow):
             msgBox3.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox3.exec_()
             self.ui.btnCalPibote.setEnabled(False)
+            self.ui.opacity_effectPibote.setOpacity(0.3)
             self.ui.btnNextTabla.setEnabled(False)
+            self.ui.opacity_effectNext.setOpacity(0.3) 
             self.ui.btnImprimir.setEnabled(True)
+            self.ui.opacity_effectImprimir.setOpacity(1) 
             self.ui.btnImprimir.setFocus()
             return
         
@@ -442,6 +450,7 @@ class Simplex(QMainWindow):
             cjZj.append(float(item.text()))
             
         self.ui.btnPreviousTabla.setEnabled(True)
+        self.ui.opacity_effectAnterior.setOpacity(1) 
         self.ui.btnCalPibote.setFocus()
             
         # Valida la última tabla
@@ -455,8 +464,11 @@ class Simplex(QMainWindow):
             msgBox4.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox4.exec_()
             self.ui.btnCalPibote.setEnabled(False)
+            self.ui.opacity_effectPibote.setOpacity(0.3)
             self.ui.btnNextTabla.setEnabled(False)
+            self.ui.opacity_effectNext.setOpacity(0.3) 
             self.ui.btnImprimir.setEnabled(True)
+            self.ui.opacity_effectImprimir.setOpacity(1) 
             self.ui.btnImprimir.setFocus()
             return
         
@@ -595,7 +607,9 @@ class Simplex(QMainWindow):
     def previousTable(self):
         self.ui.lblPibote.setText("")
         self.ui.btnCalPibote.setEnabled(True)
+        self.ui.opacity_effectPibote.setOpacity(1)
         self.ui.btnNextTabla.setEnabled(True)
+        self.ui.opacity_effectNext.setOpacity(1) 
 
         if(len(self.allTable) != 0):  
             for f in range(self.fila):
@@ -608,9 +622,11 @@ class Simplex(QMainWindow):
             self.allPibote.pop()
         else:
             self.ui.btnPreviousTabla.setEnabled(False)
+            self.ui.opacity_effectAnterior.setOpacity(0.3) 
         
         self.ui.btnCalPibote.setFocus()
         self.ui.btnImprimir.setEnabled(False)
+        self.ui.opacity_effectImprimir.setOpacity(0.3) 
         
     # Método: Elimina los datos de la tabla
     def deleteData(self):
@@ -627,11 +643,17 @@ class Simplex(QMainWindow):
         
         # Habilita el botón generar
         self.ui.btnGenerar.setEnabled(True)
+        self.ui.opacity_effectGenerar.setOpacity(1)
         self.ui.btnCalcular.setEnabled(False)
+        self.ui.opacity_effectCalc.setOpacity(0.3)
         self.ui.btnNextTabla.setEnabled(False)
+        self.ui.opacity_effectNext.setOpacity(0.3) 
         self.ui.btnPreviousTabla.setEnabled(False)
+        self.ui.opacity_effectAnterior.setOpacity(0.3) 
         self.ui.btnCalPibote.setEnabled(False)
+        self.ui.opacity_effectPibote.setOpacity(0.3)
         self.ui.btnImprimir.setEnabled(False)
+        self.ui.opacity_effectImprimir.setOpacity(0.3) 
         
         # Habilita las tablas 
         self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.AllEditTriggers)
@@ -700,7 +722,6 @@ class Simplex(QMainWindow):
                     for f in range(self.fila):
                         item = self.allTable[table][f]
                         self.arrayFila.append(item)
-                    print( self.arrayFila)
                     tabla = Table(self.arrayFila, colWidths=50, rowHeights=40)
                     tabla.setStyle([
                             ('GRID',(0,0),(-1,-1),2,colors.black),

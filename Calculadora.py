@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import Qt
 from src.simplex import Simplex
 from src.perl import Perl
 from src.views.ui_mainWindow import Ui_MainWindow
@@ -23,6 +24,12 @@ class MainWindow(QMainWindow):
         self.icoError = resolver_ruta("src/assets/cancelar.ico")
         self.icoSucess = resolver_ruta("src/assets/check.ico")
         self.setWindowIcon(QIcon(self.icoMain))
+
+        # Imagenes
+        self.img = resolver_ruta("src/assets/welcome2.png")
+        pixmap = QPixmap(self.img)
+        self.ui.label.setPixmap(pixmap)
+        self.ui.label.setAlignment(Qt.AlignCenter)
         
         # Eventos
         self.ui.actionSimplex.triggered.connect(self.showSimplexUI)
