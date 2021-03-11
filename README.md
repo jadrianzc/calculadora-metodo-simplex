@@ -29,4 +29,4 @@
 
 ### 🔨 Ejecutable del programa
 
-[Simplex.exe](https://n9.cl/031td)
+[Calculadora Simplex-Pert.exe](https://github.com/jadrianzc/calculadora-metodo-simplex/releases/download/v.1.0/Calculadora.Simplex-Pert.exe)
