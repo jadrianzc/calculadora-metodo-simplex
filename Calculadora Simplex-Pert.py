@@ -20,13 +20,13 @@ class MainWindow(QMainWindow):
             return os.path.join(os.path.abspath("."), ruta_relativa)
         
         # Icono ventana
-        self.icoMain = resolver_ruta("src/assets/InvOpeLogo.ico")
-        self.icoError = resolver_ruta("src/assets/cancelar.ico")
-        self.icoSucess = resolver_ruta("src/assets/check.ico")
+        self.icoMain = resolver_ruta("./src/assets/InvOpeLogo.ico")
+        self.icoError = resolver_ruta("./src/assets/cancelar.ico")
+        self.icoSucess = resolver_ruta("./src/assets/check.ico")
         self.setWindowIcon(QIcon(self.icoMain))
 
         # Imagenes
-        self.img = resolver_ruta("src/assets/welcome2.png")
+        self.img = resolver_ruta("./src/assets/welcome2.png")
         pixmap = QPixmap(self.img)
         self.ui.label.setPixmap(pixmap)
         self.ui.label.setAlignment(Qt.AlignCenter)
