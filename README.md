@@ -24,7 +24,7 @@
 <h3>Pert</h3>
 <p align="justify">
   Una interfaz sencilla, debe ingresar la cantidad de actividades que se van a realizar, se desplegará una tabla, la cual se debe llenar con la descripción de las actividades, sus predecesores, y los respectivos tiempos optimistas, normal y pesimista. Además, tendrá las opciones de escoger los días que no va a laborar y un calendario para elegir la fecha de inicio del las actividades.
-  Una vez ingrese los datos correctamente, se mostrará una nueva tabla con los resultados finales, donde se observan las fechas de inicio y final, la ruta crítica de actividades y un resumen del ejercio.Se activará el botón de guardar el cual permite generar un reporte de la tabla.
+  Una vez ingrese los datos correctamente, se mostrará una nueva tabla con los resultados finales, donde se observan las fechas de inicio y final, la ruta crítica de actividades y un resumen del ejercio. Se activará el botón de guardar el cual permite generar un reporte de la tabla.
 </p>
 
 ### 🔨 Ejecutable del programa
