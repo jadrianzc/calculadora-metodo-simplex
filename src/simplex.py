@@ -2,37 +2,29 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
-from vista.ui_metodoSimplex import Ui_Form
+from src.views.ui_mainWindow import Ui_MainWindow
 import numpy as np
 import sys, re, os
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.platypus import (SimpleDocTemplate, PageBreak, Image, Spacer,Paragraph, Table, TableStyle)
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 
-class Simplex(QDialog):
+class Simplex(QMainWindow):
     cantVariables = 0
     cantRestricciones = 0
     
     # Constructor
-    def __init__(self):
-        
+    def __init__(self, ui, iconErr, iconSucc, iconMain):
         super(Simplex, self).__init__()
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
+        self.ui = ui
 
-        # Resolver Ruta
-        def resolver_ruta(ruta_relativa):
-            if hasattr(sys, "_MEIPASS"):
-                return os.path.join(sys._MEIPASS, ruta_relativa)
-            return os.path.join(os.path.abspath("."), ruta_relativa)
-        
-        self.icoMain = resolver_ruta("conta.ico")
-        self.icoError = resolver_ruta("cancelar.ico")
-        self.icoSucess = resolver_ruta("check.ico")
-        self.setWindowIcon(QIcon(self.icoMain))
+        # Iconos
+        self.icoError = iconErr
+        self.icoSucess = iconSucc
+        self.setWindowIcon(QIcon(iconMain))
 
         # Eventos
         self.ui.btnGenerar.clicked.connect(self.generateArrays)
@@ -66,6 +58,7 @@ class Simplex(QDialog):
             self.ui.tableRestr.setHorizontalHeaderItem(j,item1)
 
         self.ui.btnCalcular.setEnabled(True)
+        self.ui.opacity_effectCalc.setOpacity(1)
     
     # Método: Genera la tabla de la función objetivo
     def tablaFuncionObjetivo(self, variables):
@@ -228,9 +221,13 @@ class Simplex(QDialog):
             
             # Deshabilita el botón calcular y generar
             self.ui.btnCalcular.setEnabled(False)
+            self.ui.opacity_effectCalc.setOpacity(0.3)
             self.ui.btnGenerar.setEnabled(False)
+            self.ui.opacity_effectGenerar.setOpacity(0.3)
             self.ui.btnNextTabla.setEnabled(True)
+            self.ui.opacity_effectNext.setOpacity(1) 
             self.ui.btnCalPibote.setEnabled(True)
+            self.ui.opacity_effectPibote.setOpacity(1)
             self.ui.btnCalPibote.setFocus()
             
             # Deshabilita las tablas
@@ -380,8 +377,11 @@ class Simplex(QDialog):
             msgBox3.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox3.exec_()
             self.ui.btnCalPibote.setEnabled(False)
+            self.ui.opacity_effectPibote.setOpacity(0.3)
             self.ui.btnNextTabla.setEnabled(False)
+            self.ui.opacity_effectNext.setOpacity(0.3) 
             self.ui.btnImprimir.setEnabled(True)
+            self.ui.opacity_effectImprimir.setOpacity(1) 
             self.ui.btnImprimir.setFocus()
             return
         
@@ -451,6 +451,7 @@ class Simplex(QDialog):
             cjZj.append(float(item.text()))
             
         self.ui.btnPreviousTabla.setEnabled(True)
+        self.ui.opacity_effectAnterior.setOpacity(1) 
         self.ui.btnCalPibote.setFocus()
             
         # Valida la última tabla
@@ -464,8 +465,11 @@ class Simplex(QDialog):
             msgBox4.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
             msgBox4.exec_()
             self.ui.btnCalPibote.setEnabled(False)
+            self.ui.opacity_effectPibote.setOpacity(0.3)
             self.ui.btnNextTabla.setEnabled(False)
+            self.ui.opacity_effectNext.setOpacity(0.3) 
             self.ui.btnImprimir.setEnabled(True)
+            self.ui.opacity_effectImprimir.setOpacity(1) 
             self.ui.btnImprimir.setFocus()
             return
         
@@ -604,7 +608,9 @@ class Simplex(QDialog):
     def previousTable(self):
         self.ui.lblPibote.setText("")
         self.ui.btnCalPibote.setEnabled(True)
+        self.ui.opacity_effectPibote.setOpacity(1)
         self.ui.btnNextTabla.setEnabled(True)
+        self.ui.opacity_effectNext.setOpacity(1) 
 
         if(len(self.allTable) != 0):  
             for f in range(self.fila):
@@ -617,9 +623,11 @@ class Simplex(QDialog):
             self.allPibote.pop()
         else:
             self.ui.btnPreviousTabla.setEnabled(False)
+            self.ui.opacity_effectAnterior.setOpacity(0.3) 
         
         self.ui.btnCalPibote.setFocus()
         self.ui.btnImprimir.setEnabled(False)
+        self.ui.opacity_effectImprimir.setOpacity(0.3) 
         
     # Método: Elimina los datos de la tabla
     def deleteData(self):
@@ -636,11 +644,17 @@ class Simplex(QDialog):
         
         # Habilita el botón generar
         self.ui.btnGenerar.setEnabled(True)
+        self.ui.opacity_effectGenerar.setOpacity(1)
         self.ui.btnCalcular.setEnabled(False)
+        self.ui.opacity_effectCalc.setOpacity(0.3)
         self.ui.btnNextTabla.setEnabled(False)
+        self.ui.opacity_effectNext.setOpacity(0.3) 
         self.ui.btnPreviousTabla.setEnabled(False)
+        self.ui.opacity_effectAnterior.setOpacity(0.3) 
         self.ui.btnCalPibote.setEnabled(False)
+        self.ui.opacity_effectPibote.setOpacity(0.3)
         self.ui.btnImprimir.setEnabled(False)
+        self.ui.opacity_effectImprimir.setOpacity(0.3) 
         
         # Habilita las tablas 
         self.ui.tableFuncObj.setEditTriggers(QAbstractItemView.AllEditTriggers)
@@ -656,8 +670,10 @@ class Simplex(QDialog):
         
     # Método: Cierra el programa
     def exitApp(self):
-        app = QApplication([])
-        sys.exit(app.exec_())
+        # app = QApplication([])
+        # sys.exit(app.exec_())
+        self.ui.widgetSimplex.setVisible(False)
+        self.ui.widgetPerl.setVisible(False)
 
     # Método: Genera el PDF
     def generarReporte(self):
@@ -676,7 +692,7 @@ class Simplex(QDialog):
         autor, accept = QInputDialog.getText(self, 'Generar Reporte','Ingrese el nombre de quien genera el reporte:')
         if(accept):
             try:
-                doc = SimpleDocTemplate(f'Reporte_Simplex.pdf', pagesize = A4, topMargin=12)
+                doc = SimpleDocTemplate(f'Reporte_Simplex.pdf', pagesize=A4, topMargin=12)
                 alineacionTitulo = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=20, leading=40)
                 alineacionTituloTabla = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=14, leading=40)
                 alineacionAutor = ParagraphStyle(name="centrar", alignment=TA_CENTER, fontSize=11, leading=30)
@@ -707,7 +723,6 @@ class Simplex(QDialog):
                     for f in range(self.fila):
                         item = self.allTable[table][f]
                         self.arrayFila.append(item)
-                    
                     tabla = Table(self.arrayFila, colWidths=50, rowHeights=40)
                     tabla.setStyle([
                             ('GRID',(0,0),(-1,-1),2,colors.black),
@@ -750,11 +765,3 @@ class Simplex(QDialog):
                 
         self.allTable.pop()
         self.allPibote.pop()
-
-# Inicia la aplicación
-if __name__ == '__main__':    
-    app = QApplication([])
-    app.setStyle(QStyleFactory.create('Fusion'))
-    mi_App = Simplex()
-    mi_App.show()
-    sys.exit(app.exec_())
