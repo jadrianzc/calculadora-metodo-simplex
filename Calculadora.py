@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
             return os.path.join(os.path.abspath("."), ruta_relativa)
         
         # Icono ventana
-        self.icoMain = resolver_ruta("src/assets/conta.ico")
+        self.icoMain = resolver_ruta("src/assets/InvOpeLogo.ico")
         self.icoError = resolver_ruta("src/assets/cancelar.ico")
         self.icoSucess = resolver_ruta("src/assets/check.ico")
         self.setWindowIcon(QIcon(self.icoMain))
