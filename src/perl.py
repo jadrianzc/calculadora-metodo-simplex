@@ -37,15 +37,8 @@ class Perl(QMainWindow):
         self.ui.btnBorrarPerl.clicked.connect(self.borrarTable)
         self.ui.calendario.clicked.connect(self.obtenerFecha)
     
-    # Método: Muestra otra ventana para ingresar los datos
-    def dataActividades(self):
-        self.ui.groupBoxInputActv.setVisible(True)
-        self.ui.tableInputActividades.clear()
-        self.cantidadActividades = self.ui.inputAct.value()
-        self.ui.tableInputActividades.setRowCount(self.cantidadActividades)
-        self.ui.tableInputActividades.setColumnCount(6)
-        self.Actividades = []
-        
+    # Método: Crea los encabezados de la tabla
+    def showEncabezado(self):
         # Arreglo con nombres de encabezados
         self.header = ["Actividades", "Detalle", "Predecesora", "To", "Tn", "Tp"]
         
@@ -55,16 +48,43 @@ class Perl(QMainWindow):
             item = QTableWidgetItem(self.header[indice])
             item.setBackground(QtGui.QColor(22, 20, 90))
             self.ui.tableInputActividades.setHorizontalHeaderItem(indice, item)
+
+    # Método: Muestra otra ventana para ingresar los datos
+    def dataActividades(self):
+        self.ui.groupBoxInputActv.setVisible(True)
+        self.ui.tableInputActividades.clear()
+        self.cantidadActividades = self.ui.inputAct.value()
+        try:
+            if (self.cantidadActividades < 27):
+                self.ui.tableInputActividades.setRowCount(self.cantidadActividades)
+                self.ui.tableInputActividades.setColumnCount(6)
+                self.Actividades = []
             
-        # Genera las letras del abecedario y las inserta en la columna actividad
-        self.abec = list(map(chr, range(65, 91)))
-        for i in range(self.cantidadActividades):
-            self.Actividades.append(self.abec[i])
-            celda = QTableWidgetItem(self.abec[i])
-            celda.setTextAlignment(Qt.AlignCenter)
-            celda.setFlags(Qt.ItemIsEnabled)
-            self.ui.tableInputActividades.setItem(i, 0, celda)
-     
+                self.showEncabezado()
+                    
+                # Genera las letras del abecedario y las inserta en la columna actividad
+                self.abec = list(map(chr, range(65, 91)))
+                for i in range(self.cantidadActividades):
+                    self.Actividades.append(self.abec[i])
+                    celda = QTableWidgetItem(self.abec[i])
+                    celda.setTextAlignment(Qt.AlignCenter)
+                    celda.setFlags(Qt.ItemIsEnabled)
+                    self.ui.tableInputActividades.setItem(i, 0, celda)
+            else:
+                self.ui.tableInputActividades.setRowCount(0)
+                self.ui.tableInputActividades.setColumnCount(6)
+                self.showEncabezado()
+                raise Exception(f'Error: Sobrepasa el límite de las actividades')
+                
+        except Exception as err :
+            msjErr = str(err)
+            msgBox2 = QMessageBox()
+            msgBox2.setText(msjErr)
+            msgBox2.setWindowTitle("Error")
+            msgBox2.setWindowIcon(QIcon(self.icoError))
+            msgBox2.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Century Gothic")
+            msgBox2.exec_()
+
     # Método: Obtiene la fecha del calendario
     def obtenerFecha(self):
         self.fechInicio = self.ui.calendario.selectedDate().toPyDate()
