@@ -143,9 +143,11 @@ class Perl(QMainWindow):
                         for value in range(len(listPrede)):
                             if(listPrede[value] != "N/A" and not(listPrede[value] in self.Actividades)):
                                 raise Exception(f'El valor "{listPrede[value]}" no corresponde a ninguna actividad existente')
-                            else:
-                                if(listPrede[value] == self.Actividades[f]):
-                                    raise Exception(f'El valor "{listPrede[value]}" no puede preceder de sí mismo')
+                        
+                            newActividad = self.Actividades[f:]
+                            if(listPrede[value] in newActividad):
+                                raise Exception(f'El valor "{listPrede[value]}" no puede preceder de sí mismo ni de una actividad que no se ha realizado')
+
 
                     elif(c == 3 or c == 4 or c == 5):
                         valor = int(self.ui.tableInputActividades.item(f,c).text())
